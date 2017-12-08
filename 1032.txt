@@ -1,0 +1,30 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main()
+{
+	int sum;
+	cin>>sum;
+	int **list=new int*[sum];
+	for(int x=0;x<sum;x++)
+		list[x]=new int[2];
+	for(int x=0;x<sum;x++){
+		for(int y=0;y<2;y++)
+		{cin>>list[x][y];}}
+   int *result=new int[sum];
+   for(int x=0;x<sum;x++)
+	   result[x]=0;
+   for(int x=0;x<sum;x++)
+   {
+	   result[list[x][0]]=result[list[x][0]]+list[x][1];
+   }
+   int stick=1;
+   int max=0;
+   for(int x=0;x<sum;x++)
+   {
+	   if(result[x]>max) {max=result[x];stick=x;}
+   }
+   cout<<stick<<" "<<max;
+	return 0;
+}
