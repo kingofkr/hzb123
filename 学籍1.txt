@@ -1,0 +1,1245 @@
+package system;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+
+import javax.swing.*;
+
+import java.sql.*;
+
+public class server {
+	
+	public static JFrame lg=new JFrame();
+	public static JFrame check=new JFrame();
+	public static JFrame change=new JFrame();
+	public static JFrame rt=new JFrame();
+	
+	public static JPanel p1=new JPanel();
+	public static JPanel p2=new JPanel();
+	public static JPanel p3=new JPanel();
+	public static JPanel p4=new JPanel();
+	public static int stick=0;
+	static int pass=1;
+	public static String op="按姓名查询";
+	public static String op8="语文";
+	public static int up=100,down=0;
+	public static int temps=0;
+	public static String roads="F://QQ_Favorite//8.jpg";
+	
+	public static class st
+	{
+		public String name;
+		public String no;
+		public String password;
+		public String cs;
+		public int root;
+		public String[] gd=new String[5];
+		st()
+		{
+		}
+	}
+	
+	public static class admin
+	{
+		public String name;
+		public String no;
+		public String password;
+		admin()
+		{
+
+	}
+	}
+	static admin[] ad=new admin[10];
+	static int cursor=0;
+	static st[] student=new st[100];
+	static String op1="修改";
+	static String op2="姓名";
+	static String op9="修改";
+	static int count = 0;
+	static JLabel l5=new JLabel();
+	public static void main(String args[])
+	{
+		for(int x=0;x<100;x++)
+		{
+			student[x]=new st();
+		}
+		for(int x=0;x<10;x++)
+			ad[x]=new admin();
+
+		try {
+		      Class.forName("com.mysql.jdbc.Driver");  
+		     System.out.println("Success loading Mysql Driver!");
+		    }
+		    catch (Exception e) {
+		      System.out.print("Error loading Mysql Driver!");
+		      e.printStackTrace();
+		    }
+		    try {
+		      Connection connect = DriverManager.getConnection(
+		          "jdbc:mysql://localhost:3306/mysql","root","121908");
+		      String sql = "select * from admin";
+		      Statement stmt = connect.createStatement();
+		      ResultSet rs = stmt.executeQuery(sql);
+		      count=0;
+		      while(rs.next())
+		      {
+		    	  ad[count].no=rs.getString(1);
+		    	  ad[count].name=rs.getString(2);
+		    	  ad[count].password=rs.getString(3);
+		    	  count++;
+		      }
+		    }
+		    catch(Exception e)
+		    {
+		    	
+		    }
+		    
+		int qt=1;
+		for(int q=0;q<count;q++)
+		System.out.println(ad[q].no+"  "+ad[q].name+"  "+ad[q].password+"\n");
+		
+		
+
+		//login
+		ImageIcon icon=new ImageIcon("F://keshe//3.jpg");
+		icon.setImage(icon.getImage().getScaledInstance(600,  
+               400, Image.SCALE_DEFAULT));
+		JLabel jl1=new JLabel();
+		p1.setOpaque(false);
+		jl1.setBounds(0,0,600,400);
+		jl1.setHorizontalAlignment(0);
+		jl1.setIcon(icon);
+		p1.setLayout(null);
+		lg.setTitle("login");
+		lg.setSize(600,400);
+		JLabel l1=new JLabel("工号");
+		JLabel l2=new JLabel("密码");
+		final JTextField f1=new JTextField(50);
+		final JTextField f2=new JTextField(50);
+		l1.setBounds(10,10,100,30);
+		l1.setForeground(Color.white);
+		l2.setBounds(10,60,100,30);
+		l2.setForeground(Color.white);
+		f1.setBounds(100,10,160,30);
+		f2.setBounds(100,60,160,30);
+		jl1.add(l1);
+		jl1.add(l2);
+		jl1.add(f1);
+		jl1.add(f2);
+		
+		JButton b1=new JButton("登录");
+		b1.setBounds(350,40,100,30);
+		jl1.add(b1);
+		
+		JButton b2=new JButton("退出");
+		b2.setBounds(10,170,100,30);
+		jl1.add(b2);
+		
+		JLabel lp1=new JLabel("注意:");
+		lp1.setBounds(10,210,100,30);
+		lp1.setFont(new Font("宋体",Font.BOLD, 23));
+		lp1.setForeground(Color.white);
+		jl1.add(lp1);
+		
+		JLabel lp2=new JLabel("默认管理员，工号为0001，密码admin，请进入以后进行修改");
+		lp2.setBounds(10,250,560,30);
+		lp2.setFont(new Font("宋体",Font.BOLD, 18));
+		lp2.setForeground(Color.white);
+		jl1.add(lp2);
+		
+		p1.add(jl1);
+		lg.add(p1);
+
+		lg.setVisible(true);
+		
+		
+		
+		b2.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				System.exit(1);
+			}
+		});
+		
+		b1.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				try {
+				      Connection connect = DriverManager.getConnection(
+				          "jdbc:mysql://localhost:3306/mysql","root","121908");
+				      String sql = "select * from admin";
+				      Statement stmt = connect.createStatement();
+				      ResultSet rs = stmt.executeQuery(sql);
+				      count=0;
+				      while(rs.next())
+				      {
+				    	  ad[count].no=rs.getString(1);
+				    	  ad[count].name=rs.getString(2);
+				    	  ad[count].password=rs.getString(3);
+				    	  count++;
+				      }
+				    }
+				    catch(Exception e2)
+				    {
+				    	
+				    }
+				int count2=0;
+				int judge=0;
+				temps=0;
+				while(count2<count)
+				{
+					if(ad[count2].no.equals(f1.getText())==false)
+						count2++;
+					else
+					{
+						if(ad[count2].password.equals(f2.getText())==false)
+						{
+							judge=1;
+							JOptionPane.showMessageDialog(null,"密码错误");
+							count2=count+1;
+						}
+						else
+						{
+							temps=count2;
+							judge=2;
+							count2=count+1;
+						}
+					}
+				}
+				if(judge==0)
+				{
+					JOptionPane.showMessageDialog(null,"用户不存在");
+				}
+				else if(judge==2)
+				{
+					JOptionPane.showMessageDialog(null,"登录成功");
+					lg.setVisible(false);
+					l5.setText(ad[temps].no);
+					check.setVisible(true);
+				}
+			}
+		});
+
+		//main
+
+		
+		check.setSize(800,800);
+		p2.setLayout(null);
+		check.setTitle("控制台");
+		ImageIcon icon2=new ImageIcon("F://keshe//4.jpg");
+		icon2.setImage(icon2.getImage().getScaledInstance(800,  
+               800, Image.SCALE_DEFAULT));
+		JLabel jl2=new JLabel();
+		p2.setOpaque(false);
+		jl2.setBounds(0,0,800,800);
+		jl2.setHorizontalAlignment(0);
+		jl2.setIcon(icon2);
+		p2.add(jl2);
+		
+		JLabel ml1=new JLabel();
+		ImageIcon icon3=new ImageIcon("F://QQ_Favorite//6.jpg");
+		icon3.setImage(icon3.getImage().getScaledInstance(90,  
+               130, Image.SCALE_DEFAULT));
+		ml1.setIcon(icon3);
+		ml1.setBounds(10,10,90,130);
+		jl2.add(ml1);
+		JLabel l3=new JLabel("个人信息");
+		JLabel l4=new JLabel("工号：");
+		l3.setBounds(140,10,100,30);
+		l3.setFont(new Font("宋体",Font.BOLD, 23));
+		l3.setForeground(Color.white);
+		l4.setBounds(140,50,100,30);
+		l4.setFont(new Font("宋体",Font.BOLD, 19));
+		l4.setForeground(Color.white);
+		l5.setBounds(190,50,100,30);
+		l5.setFont(new Font("宋体",Font.BOLD, 19));
+		l5.setForeground(Color.white);
+		jl2.add(l3);
+		jl2.add(l4);
+		jl2.add(l5);
+		
+		JButton b3=new JButton("返回");
+		b3.setBounds(140,90,90,50);
+		jl2.add(b3);
+		
+		JButton cl=new JButton("清屏");
+		cl.setBounds(240,90,90,50);
+		jl2.add(cl);
+		
+		
+		
+		JLabel l7=new JLabel("显示窗");
+		final JTextArea a3=new JTextArea();
+		JScrollPane p1=new JScrollPane();
+		p1.setViewportView(a3);
+		l7.setBounds(390,10,100,30);
+		l7.setFont(new Font("宋体",Font.BOLD, 23));
+		l7.setForeground(Color.white);
+		jl2.add(l7);
+		p1.setBounds(390,60,370,640);
+		jl2.add(p1);
+
+		JLabel l6=new JLabel("控制面板");
+		l6.setBounds(10,180,100,30);
+		l6.setFont(new Font("宋体",Font.BOLD, 23));
+		l6.setForeground(Color.black);
+		jl2.add(l6);
+		
+		JButton b4=new JButton("用户信息修改");
+		b4.setBounds(10,230,150,30);
+		jl2.add(b4);
+		JButton pt=new JButton("学生照片查看");
+		pt.setBounds(170,230,150,30);
+		jl2.add(pt);
+		JLabel l11=new JLabel("关键词");
+		l11.setBounds(10,280,120,30);
+		jl2.add(l11);
+		String []chain1={"按姓名查询","按学号查询"};
+		JComboBox cb1=new JComboBox(chain1);
+		cb1.setBounds(200,320,130,30);
+		jl2.add(cb1);
+		final JTextField tf1=new JTextField(50);
+		tf1.setBounds(10,320,150,30);
+		jl2.add(tf1);
+		JButton b5=new JButton("信息查询");
+		b5.setBounds(10,360,120,30);
+		jl2.add(b5);
+		JLabel l10=new JLabel("科目名称");
+		l10.setBounds(10,410,120,30);
+		jl2.add(l10);
+		String []chain9={"语文","数学","英语","政治","历史"};
+		JComboBox tf2=new JComboBox(chain9);
+		tf2.setBounds(10,450,120,30);
+		jl2.add(tf2);
+		JLabel l8=new JLabel("分数段");
+		l8.setBounds(10,500,120,30);
+		jl2.add(l8);
+		String []chain2=new String[101];
+		for(int x=0;x<=100;x++)
+			chain2[x]=Integer.toString(x);
+		JComboBox cb2=new JComboBox(chain2);
+		cb2.setBounds(140,500,50,30);
+		jl2.add(cb2);
+		JLabel l9=new JLabel(" ----- ");
+		l9.setBounds(190,500,50,30);
+		jl2.add(l9);
+		JComboBox cb3=new JComboBox(chain2);
+		cb3.setBounds(220,500,50,30);
+		jl2.add(cb3);
+		JButton b6=new JButton("成绩查询");
+		b6.setBounds(10,570,120,30);
+		jl2.add(b6);
+		JButton avg=new JButton("各科目成绩统计");
+		avg.setBounds(150,570,150,30);
+		jl2.add(avg);
+		JButton b7=new JButton("管理员信息修改");
+		b7.setBounds(10,630,150,30);
+		jl2.add(b7);
+		JButton show=new JButton("管理员列表显示");
+		show.setBounds(170,630,150,30);
+		jl2.add(show);
+		JButton b8=new JButton("成绩录入");
+		b8.setBounds(10,690,150,30);
+		jl2.add(b8);
+		
+		cl.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				a3.setText("");
+			}
+		});
+		
+		show.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				try
+				{
+					      Connection connect = DriverManager.getConnection(
+					          "jdbc:mysql://localhost:3306/mysql","root","121908");
+					      String sql = "select * from admin";
+					      Statement stmt = connect.createStatement();
+					      ResultSet rs = stmt.executeQuery(sql);
+					      while(rs.next())
+					      {
+					    	  a3.append("工号："+rs.getString(1)+"\n"+"姓名："+rs.getString(2)+"\n"+"密码："+rs.getString(3)+"\n");
+					      }
+				}
+				catch(Exception e20)
+				{
+					e20.printStackTrace();
+				}
+			}
+		});
+		
+		avg.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				try
+				{
+					      Connection connect = DriverManager.getConnection(
+					          "jdbc:mysql://localhost:3306/mysql","root","121908");
+					      String sql = "select * from mark";
+					      Statement stmt = connect.createStatement();
+					      ResultSet rs = stmt.executeQuery(sql);
+					      int ctc=0;
+					      int pas[]=new int[5];
+					      int grad[]=new int[5];
+					      int ppcount[][]=new int[5][6];//<60,60-69,70-79,80-89,90-99,100
+					      for(int x=0;x<5;x++)
+					      { grad[x]=0;pas[x]=0;}
+					      for(int x=0;x<5;x++)
+					    	  for(int y=0;y<6;y++)
+					    		  ppcount[x][y]=0;
+					      while(rs.next())
+					      {
+					    	  ctc++;
+					    	  for(int x=0;x<5;x++)
+					    		  {grad[x]=grad[x]+rs.getInt(x+2);
+					    		  if(rs.getInt(x+2)>=60)
+					    			  pas[x]++;
+					    		  if(rs.getInt(x+2)<60) ppcount[x][0]++;
+					    		  if(rs.getInt(x+2)>=60&&rs.getInt(x+2)<70)
+					    			  ppcount[x][1]++;
+					    		  else if(rs.getInt(x+2)>=70&&rs.getInt(x+2)<80)
+					    			  ppcount[x][2]++;
+					    		  else if(rs.getInt(x+2)>=80&&rs.getInt(x+2)<90)
+					    			  ppcount[x][3]++;
+					    			  else if(rs.getInt(x+2)>=90&&rs.getInt(x+2)<100)
+					    				  ppcount[x][4]++;
+					    				  else if(rs.getInt(x+2)==100)
+					    					  ppcount[x][5]++;
+					    		  }
+					      }
+					      sql = "select student.cs from student,mark where mark.no=student.no group by student.cs;";
+					      stmt = connect.createStatement();
+					      rs = stmt.executeQuery(sql);
+					      int count=0;
+					      String []cs=new String[100];
+					      while(rs.next())
+					    	  {
+					    	  cs[count]=rs.getString(1);
+					    	  count++;
+					    	  }
+					      int ct[]=new int[count];
+					      int ttl[]=new int[count];
+					      for(int x=0;x<count;x++)
+					    	  {ct[x]=0;ttl[x]=0;}
+					      sql="select yuwen+shuxue+yingyu+zhengzhi+lishi,cs from mark,student where mark.no=student.no;";
+					      stmt = connect.createStatement();
+					      rs = stmt.executeQuery(sql);
+					      int x=0;
+					      while(rs.next())
+					      {
+					    	  
+					    	  while(rs.getString(2).equals(cs[x])==false)
+					    	  {
+					    		  x++;
+					    	  }
+					    	  ct[x]++;
+				    		  ttl[x]=ttl[x]+rs.getInt(1);x=0;
+					    	  
+					      }
+					      
+					      
+					      a3.append("语文成绩：  "+"\n"+"平均分："+grad[0]/ctc+"\n"+"通过率： "+pas[0]*100/ctc+"%"+"\n");
+					      a3.append("分数段人数："+"\n");
+					      a3.append("<60: "+ppcount[0][0]+"\n");
+					      a3.append("60-69: "+ppcount[0][1]+"\n");
+					      a3.append("70-79: "+ppcount[0][2]+"\n");
+					      a3.append("80-89: "+ppcount[0][3]+"\n");
+					      a3.append("90-99: "+ppcount[0][4]+"\n");
+					      a3.append("100: "+ppcount[0][5]+"\n"+"\n");
+					      a3.append("数学成绩：  "+"\n"+"平均分："+grad[1]/ctc+"\n"+"通过率： "+pas[1]*100/ctc+"%"+"\n");
+					      a3.append("分数段人数："+"\n");
+					      a3.append("<60: "+ppcount[1][0]+"\n");
+					      a3.append("60-69: "+ppcount[1][1]+"\n");
+					      a3.append("70-79: "+ppcount[1][2]+"\n");
+					      a3.append("80-89: "+ppcount[1][3]+"\n");
+					      a3.append("90-99: "+ppcount[1][4]+"\n");
+					      a3.append("100: "+ppcount[1][5]+"\n"+"\n");
+					      a3.append("英语成绩：  "+"\n"+"平均分："+grad[2]/ctc+"\n"+"通过率： "+pas[2]*100/ctc+"%"+"\n");
+					      a3.append("分数段人数："+"\n");
+					      a3.append("<60: "+ppcount[2][0]+"\n");
+					      a3.append("60-69: "+ppcount[2][1]+"\n");
+					      a3.append("70-79: "+ppcount[2][2]+"\n");
+					      a3.append("80-89: "+ppcount[2][3]+"\n");
+					      a3.append("90-99: "+ppcount[2][4]+"\n");
+					      a3.append("100: "+ppcount[2][5]+"\n"+"\n");
+					      a3.append("政治成绩：  "+"\n"+"平均分："+grad[3]/ctc+"\n"+"通过率： "+pas[3]*100/ctc+"%"+"\n");
+					      a3.append("分数段人数："+"\n");
+					      a3.append("<60: "+ppcount[3][0]+"\n");
+					      a3.append("60-69: "+ppcount[3][1]+"\n");
+					      a3.append("70-79: "+ppcount[3][2]+"\n");
+					      a3.append("80-89: "+ppcount[3][3]+"\n");
+					      a3.append("90-99: "+ppcount[3][4]+"\n");
+					      a3.append("100: "+ppcount[3][5]+"\n"+"\n");
+					      a3.append("历史成绩：  "+"\n"+"平均分："+grad[4]/ctc+"\n"+"通过率： "+pas[4]*100/ctc+"%"+"\n");
+					      a3.append("分数段人数："+"\n");
+					      a3.append("<60: "+ppcount[4][0]+"\n");
+					      a3.append("60-69: "+ppcount[4][1]+"\n");
+					      a3.append("70-79: "+ppcount[4][2]+"\n");
+					      a3.append("80-89: "+ppcount[4][3]+"\n");
+					      a3.append("90-99: "+ppcount[4][4]+"\n");
+					      a3.append("100: "+ppcount[4][5]+"\n"+"\n");
+					      
+					      
+					      a3.append("各班平均分："+"\n");
+					      for(int x1=0;x1<count;x1++)
+					      {
+					    	  a3.append(cs[x1]+": "+ttl[x1]/ct[x1]+"\n");
+					      }
+				}
+				catch(Exception e16)
+				{
+					
+				}
+			}
+		});
+		
+		pt.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				final JFrame pt=new JFrame();
+				JPanel ptp=new JPanel();
+				pt.setSize(500,500);
+				ptp.setLayout(null);
+				pt.setTitle("照片查看");
+				final JLabel stpc=new JLabel();
+				JLabel pcs=new JLabel("照片显示");
+				JLabel ps1=new JLabel("查看学生学号");
+				final JTextField ps2=new JTextField(50);
+				JButton ps3=new JButton("查看");
+				JButton ps4=new JButton("取消");
+				JButton ps5=new JButton("修改");
+				JButton ps6=new JButton("选择文件");
+				pcs.setBounds(10,10,100,30);
+				stpc.setBounds(10,60,100,130);
+				ps6.setBounds(150,80,100,30);
+				ps5.setBounds(250,260,100,30);
+				ps1.setBounds(10,200,100,30);
+				ps2.setBounds(10,260,100,30);
+				ps3.setBounds(130,260,100,30);
+				ps4.setBounds(10,300,100,30);
+				
+				final JLabel aft=new JLabel();
+				aft.setBounds(280,60,100,130);
+				ptp.add(aft);
+				
+				ptp.add(pcs);
+				ptp.add(stpc);
+				ptp.add(ps5);
+				ptp.add(ps6);
+				ptp.add(ps1);
+				ptp.add(ps2);
+				ptp.add(ps3);
+				ptp.add(ps4);
+				pt.add(ptp);
+				pt.setVisible(true);
+				
+				ps6.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						JFileChooser jfc=new JFileChooser();  
+				        jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES );  
+				        jfc.showDialog(new JLabel(), "选择");  
+				        File file=jfc.getSelectedFile();  
+				        roads=file.getAbsolutePath();
+				        JOptionPane.showMessageDialog(null,roads);
+				        ImageIcon rd=new ImageIcon(roads);
+					      rd.setImage(rd.getImage().getScaledInstance(100,  
+					               130, Image.SCALE_DEFAULT));
+					      aft.setIcon(rd);
+				        
+					}
+				});
+				
+				ps5.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						try
+						{
+							Connection connect = DriverManager.getConnection(
+							          "jdbc:mysql://localhost:3306/mysql","root","121908");
+							PreparedStatement Statement=connect.prepareStatement("update photo set pic=? where no=?");
+							Statement.setString(1,roads);
+							Statement.setString(2,ps2.getText());
+							Statement.executeUpdate();
+							JOptionPane.showMessageDialog(null,"修改完毕");
+							pt.setVisible(false);
+						}
+						catch(Exception e17)
+						{
+							e17.printStackTrace();
+						}
+					}
+				});
+				
+				ps4.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						pt.setVisible(false);
+					}
+					
+				});
+		
+				ps3.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						try
+						{
+							Connection connect = DriverManager.getConnection(
+							          "jdbc:mysql://localhost:3306/mysql","root","121908");
+							      String sql = "select * from photo where no="+ps2.getText();
+							      Statement stmt = connect.createStatement();
+							      ResultSet rs = stmt.executeQuery(sql);
+							      String road = "F:\\QQ_Favorite\\1.jpg";
+							      while(rs.next())
+							      {
+							    	  road=rs.getString(2);
+							      }
+							      ImageIcon rd=new ImageIcon(road);
+							      rd.setImage(rd.getImage().getScaledInstance(100,  
+							               130, Image.SCALE_DEFAULT));
+							      stpc.setIcon(rd);
+							      
+						}
+						catch(Exception e15)
+						{
+							e15.printStackTrace();
+						}
+					}
+		});
+			}
+			});
+		
+		cb1.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {  
+					op=e.getItem().toString();
+				}
+			}
+		});
+		
+		cb2.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {  
+					down=Integer.parseInt(e.getItem().toString());
+				}
+			}
+		});
+		
+		cb3.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {  
+					up=Integer.parseInt(e.getItem().toString());
+				}
+			}
+		});
+		
+		tf2.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {  
+					op8=e.getItem().toString();
+				}
+			}
+		});
+		
+		b3.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				check.setVisible(false);
+				lg.setVisible(true);
+			}
+		});
+		
+		b4.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				final JFrame tf=new JFrame();
+				JPanel tp=new JPanel();
+				tf.setSize(500,500);
+				tf.setTitle("修改台");
+				tp.setLayout(null);
+				JLabel l11=new JLabel("需要进行的操作");
+				l11.setBounds(10,10,160,30);
+				tp.add(l11);
+				String []chain4={"修改","删除"};
+				JComboBox cb6=new JComboBox(chain4);
+				cb6.setBounds(10,60,80,30);
+				tp.add(cb6);
+				JLabel l12=new JLabel("要操作的学生学号");
+				l12.setBounds(10,100,160,30);
+				tp.add(l12);
+				JLabel l13=new JLabel("要修改的项目（如修改）");
+				l13.setBounds(10,180,160,30);
+				tp.add(l13);
+				JLabel l14=new JLabel("要修改的值（如修改）");
+				l14.setBounds(10,260,160,30);
+				tp.add(l14);
+				final JTextField tf5=new JTextField(50);
+				tf5.setBounds(10,140,130,30);
+				tp.add(tf5);
+				String []chain3={"姓名","学号","班级","密码"};
+				JComboBox cb5=new JComboBox(chain3);
+				cb5.setBounds(10,220,80,30);
+				tp.add(cb5);
+				final JTextField tf7=new JTextField(50);
+				tf7.setBounds(10,300,130,30);
+				JButton jb7=new JButton("执行修改");
+				jb7.setBounds(10,350,130,30);
+				JButton ex=new JButton("退出");
+				ex.setBounds(10,400,130,30);
+				tp.add(ex);
+				tp.add(jb7);
+				tp.add(tf7);
+				tf.add(tp);
+				tf.setVisible(true);
+				
+				ex.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						tf.setVisible(false);
+					}
+				}
+				);
+				
+				cb6.addItemListener(new ItemListener()
+				{
+					public void itemStateChanged(ItemEvent e) {
+						if (e.getStateChange() == ItemEvent.SELECTED) {  
+							op1=e.getItem().toString();
+						}
+					}
+				});
+				
+				cb5.addItemListener(new ItemListener()
+				{
+					public void itemStateChanged(ItemEvent e) {
+						if (e.getStateChange() == ItemEvent.SELECTED) {  
+							op2=e.getItem().toString();
+						}
+					}
+				});
+				
+				jb7.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						try{
+							st tps=new st();
+							Connection connect = DriverManager.getConnection(
+							          "jdbc:mysql://localhost:3306/mysql","root","121908");
+
+							String sql="select * from student where no="+tf5.getText();
+						      Statement stmt = connect.createStatement();
+						      ResultSet rs = stmt.executeQuery(sql);
+						      while(rs.next())
+						      {
+						    	  tps.no=rs.getString(1);
+						    	  tps.name=rs.getString(2);
+						    	  tps.password=rs.getString(3);
+						    	  tps.cs=rs.getString(4);
+						      }
+								if(op1.equals("修改")==true)
+								{
+									
+									PreparedStatement Statement;
+									if(op2.equals("姓名")==true)
+									{
+										Statement=connect.prepareStatement("update student set name=? where no=?;");
+										Statement.setString(1, tf7.getText());
+										Statement.setString(2, tps.no);
+										Statement.executeUpdate();
+										JOptionPane.showMessageDialog(null,"修改成功");
+									}
+									else if(op2.equals("班级")==true)
+									{
+										Statement=connect.prepareStatement("update student set cs=? where no=?;");
+										Statement.setString(1, tf7.getText());
+										Statement.setString(2, tps.no);
+										Statement.executeUpdate();
+										JOptionPane.showMessageDialog(null,"修改成功");
+									}
+									else if(op2.equals("密码")==true)
+									{
+										Statement=connect.prepareStatement("update student set password=? where no=?;");
+										Statement.setString(1, tf7.getText());
+										Statement.setString(2, tps.no);
+										Statement.executeUpdate();
+										JOptionPane.showMessageDialog(null,"修改成功");
+									}
+								}
+							else if(op1.equals("删除")==true)
+							{
+								PreparedStatement Statement=connect.prepareStatement("delete from mark where no=?");
+								Statement.setString(1, tf5.getText());
+								Statement.executeUpdate();
+								Statement=connect.prepareStatement("delete from photo where no=?");
+								Statement.setString(1, tf5.getText());
+								Statement.executeUpdate();
+								Statement=connect.prepareStatement("delete from student where no=?");
+								Statement.setString(1, tf5.getText());
+								Statement.executeUpdate();
+								JOptionPane.showMessageDialog(null,"删除成功");
+							}
+						}
+						catch(Exception e9)
+						{
+							e9.printStackTrace();
+						}
+					}
+				});
+
+			}
+		});
+		
+		b5.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				try{
+					Connection connect = DriverManager.getConnection(
+					          "jdbc:mysql://localhost:3306/mysql","root","121908");
+					if(tf1.getText().equals("")==true){
+					a3.append("");
+					String sql="select * from student";
+				      Statement stmt = connect.createStatement();
+				      ResultSet rs = stmt.executeQuery(sql);
+				      int count=0;
+				      while(rs.next())
+				      {
+				    	  a3.append("学号："+rs.getString(1)+"\n");
+				    	  a3.append("姓名："+rs.getString(2)+"\n");
+				    	  a3.append("密码："+rs.getString(3)+"\n");
+				    	  a3.append("班级："+rs.getString(4)+"\n");
+				    	  count++;
+				      }  
+				      if(count==0)
+				      {
+				    	  JOptionPane.showMessageDialog(null,"该生不存在");
+				      } 
+					}
+					else
+					{
+					if(op.equals("按学号查询")==true)
+					{
+						a3.append("");
+						String sql="select * from student where no="+tf1.getText();
+					      Statement stmt = connect.createStatement();
+					      ResultSet rs = stmt.executeQuery(sql);
+					      int count=0;
+					      while(rs.next())
+					      {
+					    	  a3.append("学号："+rs.getString(1)+"\n");
+					    	  a3.append("姓名："+rs.getString(2)+"\n");
+					    	  a3.append("密码："+rs.getString(3)+"\n");
+					    	  a3.append("班级："+rs.getString(4)+"\n");
+					    	  count++;
+					      }  
+					      if(count==0)
+					      {
+					    	  JOptionPane.showMessageDialog(null,"该生不存在");
+					      }
+						}
+					else if(op.equals("按姓名查询")==true)
+					{
+						a3.append("");
+						connect = DriverManager.getConnection(
+						          "jdbc:mysql://localhost:3306/mysql","root","121908");
+						String sql="select * from student where name='"+tf1.getText()+"'";
+					      Statement stmt = connect.createStatement();
+					      ResultSet rs = stmt.executeQuery(sql);
+					      int count=0;
+					      while(rs.next())
+					      {
+					    	  a3.append("学号："+rs.getString(1)+"\n");
+					    	  a3.append("姓名："+rs.getString(2)+"\n");
+					    	  a3.append("密码："+rs.getString(3)+"\n");
+					    	  a3.append("班级："+rs.getString(4)+"\n");
+					    	  count++;
+					      }  
+					      if(count==0)
+					      {
+					    	  JOptionPane.showMessageDialog(null,"该生不存在");
+					      }
+						
+			}
+					}
+			}
+				catch(Exception e7)
+				{
+					e7.printStackTrace();
+				}
+			}
+		});
+		
+		b6.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				try{
+				Connection connect = DriverManager.getConnection(
+				          "jdbc:mysql://localhost:3306/mysql","root","121908");
+					      String sql="select * from mark";
+					      Statement stmt = connect.createStatement();
+					      String []sp=new String[30];
+					      int tpp=0;
+					      ResultSet rs = stmt.executeQuery(sql);
+					      int yw[]=new int[30];
+					      int sx[]=new int[30];
+					      int yy[]=new int[30];
+					      int zz[]=new int[30];
+					      int ls[]=new int[30];
+					      while(rs.next())
+					      {
+					    	  sp[tpp]=rs.getString(1);
+					    	  yw[tpp]=rs.getInt(2);
+					    	  sx[tpp]=rs.getInt(3);
+					    	  yy[tpp]=rs.getInt(4);
+					    	  zz[tpp]=rs.getInt(5);
+					    	  ls[tpp]=rs.getInt(6);
+					    	  System.out.println(sp[tpp]+"   "+sx[tpp]+"\n");
+					    	  tpp++;
+					      }
+					      int co=0;
+					      if(op8.equals("语文")==true)
+					      {
+					    	  co=0;
+					    	  for(int x=0;x<tpp;x++)
+					    	  {
+					    		  if(yw[x]<=up&&yw[x]>=down)
+					    		  {
+					    			  a3.append(sp[x]+"   score: "+yw[x]+"\n");
+					    			  co++;
+					    		  }
+					    	  }
+					    	  a3.append("the total is"+co+"\n");
+					      }
+					      else if(op8.equals("数学")==true)
+					      {
+					    	  co=0;
+					    	  for(int x=0;x<tpp;x++)
+					    	  {
+					    		  if(sx[x]<=up&&sx[x]>=down)
+					    		  {
+					    			  a3.append(sp[x]+"   score: "+sx[x]+"\n");
+					    			  co++;
+					    		  }
+					    	  }
+					    	  a3.append("the total is"+co+"\n");
+					      }
+					      else if(op8.equals("英语")==true)
+					      {
+					    	  co=0;
+					    	  for(int x=0;x<tpp;x++)
+					    	  {
+					    		  if(yy[x]<=up&&yy[x]>=down)
+					    		  {
+					    			  a3.append(sp[x]+"   score: "+yy[x]+"\n");
+					    			  co++;
+					    		  }
+					    	  }
+					    	  a3.append("the total is"+co+"\n");
+					      }
+					      else if(op8.equals("政治")==true)
+					      {
+					    	  co=0;
+					    	  for(int x=0;x<tpp;x++)
+					    	  {
+					    		  if(zz[x]<=up&&zz[x]>=down)
+					    		  {
+					    			  a3.append(sp[x]+"   score: "+zz[x]+"\n");
+					    			  co++;
+					    		  }
+					    	  }
+					    	  a3.append("the total is"+co+"\n");
+					      }
+					      else if(op8.equals("历史")==true)
+					      {
+					    	  co=0;
+					    	  for(int x=0;x<tpp;x++)
+					    	  {
+					    		  if(ls[x]<=up&&ls[x]>=down)
+					    		  {
+					    			  a3.append(sp[x]+"   score: "+ls[x]+"\n");
+					    			  co++;
+					    		  }
+					    	  }
+					    	  a3.append("the total is"+co+"\n");
+					      }
+					      
+					      
+					      
+			}
+				catch(Exception e6)
+				{
+					e6.printStackTrace();
+				}
+			}
+		});
+		
+		b7.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				final JFrame last=new JFrame();
+				JPanel lastp=new JPanel();
+				last.setSize(500,500);
+				last.setTitle("管理信息修改");
+				lastp.setLayout(null);
+				JLabel ln=new JLabel("执行项目");
+				ln.setBounds(10,10,100,30);
+				lastp.add(ln);
+				String []chain6={"修改","管理员降权","管理员升权"};//升权即增加管理员，降权即删除管理员
+				JComboBox cb8=new JComboBox(chain6);
+				cb8.setBounds(10,50,150,30);
+				lastp.add(cb8);
+				JLabel ln2=new JLabel("作修改工号");
+				ln2.setBounds(10,100,150,30);
+				lastp.add(ln2);
+				final JTextField jtf=new JTextField(50);
+				jtf.setBounds(10,150,150,30);
+				lastp.add(jtf);
+				JLabel ln3=new JLabel("密码修改");
+				ln3.setBounds(10,200,150,30);
+				lastp.add(ln3);
+				final JTextField jtf1=new JTextField(50);
+				jtf1.setBounds(10,250,150,30);
+				lastp.add(jtf1);
+				JButton jbb=new JButton("执行修改");
+				jbb.setBounds(10,300,150,30);
+				lastp.add(jbb);
+				JButton ex=new JButton("退出");
+				ex.setBounds(10,350,150,30);
+				last.add(ex);
+				last.add(lastp);
+				last.setVisible(true);
+				
+				ex.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						last.setVisible(false);
+					}
+				});
+				
+				cb8.addItemListener(new ItemListener()
+				{
+					public void itemStateChanged(ItemEvent e) {
+						if (e.getStateChange() == ItemEvent.SELECTED) {  
+							op9=e.getItem().toString();
+						}
+					}
+				});
+				
+				jbb.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						try{
+							Connection connect = DriverManager.getConnection(
+							          "jdbc:mysql://localhost:3306/mysql","root","121908");
+							if(op9.equals("修改")==true)
+							{
+								String sql="select * from admin where no="+jtf.getText();
+							      Statement stmt = connect.createStatement();
+							      ResultSet rs = stmt.executeQuery(sql);
+							      String nm = null;
+							      while(rs.next())
+							      {
+							    	  nm=rs.getString(2);
+							    	  System.out.println(nm);
+							      }
+							      PreparedStatement Statement=connect.prepareStatement("delete from admin where no=?");
+							      Statement.setString(1,jtf.getText());
+							      Statement.executeUpdate();
+							      Statement=connect.prepareStatement("insert into admin values(?,?,?)");
+									Statement.setString(1,jtf.getText());
+									Statement.setString(2,nm);
+									Statement.setString(3,jtf1.getText());
+									Statement.executeUpdate();
+								JOptionPane.showMessageDialog(null,"修改成功");
+							}
+							else if(op9.equals("管理员升权"))
+							{
+								PreparedStatement Statement=connect.prepareStatement("insert into admin values(?,?,?)");
+								Statement.setString(1,jtf.getText());
+								Statement.setString(2,"admin");
+								Statement.setString(3,jtf1.getText());
+								Statement.executeUpdate();
+								JOptionPane.showMessageDialog(null,"修改成功");
+							}
+							else if(op9.equals("管理员降权"))
+							{
+								PreparedStatement Statement=connect.prepareStatement("delete from admin where no=?");
+								Statement.setString(1,jtf.getText());
+								Statement.executeUpdate();
+								JOptionPane.showMessageDialog(null,"修改成功");
+							}
+						}
+						catch(Exception e8)
+						{
+							e8.printStackTrace();
+						}
+					}
+				});
+				
+			}
+		});
+		
+		b8.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				final JFrame ll=new JFrame();
+				JPanel pp=new JPanel();
+				ll.setSize(400,400);
+				pp.setLayout(null);
+				ll.setTitle("成绩录入");
+				JLabel jlj1=new JLabel("学号");
+				jlj1.setBounds(10,10,100,30);
+				pp.add(jlj1);
+				final JTextField jtf1=new JTextField(50);
+				jtf1.setBounds(130,10,100,30);
+				pp.add(jtf1);
+				JLabel jlj2=new JLabel("语文");
+				jlj2.setBounds(10,50,100,30);
+				pp.add(jlj2);
+				final JTextField jtf2=new JTextField(50);
+				jtf2.setBounds(130,50,100,30);
+				pp.add(jtf2);
+				JLabel jlj3=new JLabel("数学");
+				jlj3.setBounds(10,90,100,30);
+				pp.add(jlj3);
+				final JTextField jtf3=new JTextField(50);
+				jtf3.setBounds(130,90,100,30);
+				pp.add(jtf3);
+				JLabel jlj4=new JLabel("英语");
+				jlj4.setBounds(10,130,100,30);
+				pp.add(jlj4);
+				final JTextField jtf4=new JTextField(50);
+				jtf4.setBounds(130,130,100,30);
+				pp.add(jtf4);
+				JLabel jlj5=new JLabel("政治");
+				jlj5.setBounds(10,170,100,30);
+				pp.add(jlj5);
+				final JTextField jtf5=new JTextField(50);
+				jtf5.setBounds(130,170,100,30);
+				pp.add(jtf5);
+				JLabel jlj6=new JLabel("历史");
+				jlj6.setBounds(10,210,100,30);
+				pp.add(jlj6);
+				final JTextField jtf6=new JTextField(50);
+				jtf6.setBounds(130,210,100,30);
+				pp.add(jtf6);
+				JButton jbj=new JButton("录入");
+				jbj.setBounds(10,250,100,30);
+				JButton qt=new JButton("取消");
+				qt.setBounds(10,290,100,30);
+				pp.add(jbj);
+				pp.add(qt);
+				ll.add(pp);
+				ll.setVisible(true);
+				qt.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						ll.setVisible(false);
+					}
+				});
+				jbj.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						try {
+						      Connection connect = DriverManager.getConnection(
+						          "jdbc:mysql://localhost:3306/mysql","root","121908");
+						      PreparedStatement Statement=connect.prepareStatement("INSERT INTO mark VALUES(?,?,?,?,?,?)");
+						      String sql;
+						      sql="select * from student where no="+jtf1.getText();
+						      Statement stmt = connect.createStatement();
+						      ResultSet rs = stmt.executeQuery(sql);
+						      if(rs.next()==false)
+						    	  JOptionPane.showMessageDialog(null,"学生不存在");
+						      else
+						      {
+						      sql="select no from mark";
+						      stmt = connect.createStatement();
+						      rs = stmt.executeQuery(sql);
+						      String tep[]=new String[100];
+						      int x=0;
+						      while(rs.next())
+						      {
+						    	  tep[x]=rs.getString(1);
+						    	  x++;
+						      }
+						      Statement.setString(1, jtf1.getText());
+						      Statement.setString(2, jtf2.getText());
+						      Statement.setString(3, jtf3.getText());
+						      Statement.setString(4, jtf4.getText());
+						      Statement.setString(5, jtf5.getText());
+						      Statement.setString(6, jtf6.getText());
+						      x=0;
+						      while(x<tep.length)
+						      {
+						    	  if(jtf1.getText().equals(tep[x])==false)
+						    		  x++;
+						    	  else x=tep.length+100;
+						      }
+						      if(x==tep.length){
+					          Statement.executeUpdate();
+					          JOptionPane.showMessageDialog(null,"录入完毕");
+					          ll.setVisible(false);}
+						      else if(x==tep.length+100)
+						      {
+						          int add=JOptionPane.showConfirmDialog(null, "此学号已经录入，是否覆盖", " WarningDialog!", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+						          if(add==JOptionPane.YES_OPTION)
+						          {
+						        	  Statement=connect.prepareStatement("delete from mark where no=?");
+						        	  Statement.setString(1, jtf1.getText());
+						        	  Statement.executeUpdate();
+						        	  Statement=connect.prepareStatement("INSERT INTO mark VALUES(?,?,?,?,?,?)");
+						        	  Statement.setString(1, jtf1.getText());
+								      Statement.setString(2, jtf2.getText());
+								      Statement.setString(3, jtf3.getText());
+								      Statement.setString(4, jtf4.getText());
+								      Statement.setString(5, jtf5.getText());
+								      Statement.setString(6, jtf6.getText());
+								      Statement.executeUpdate();
+								      JOptionPane.showMessageDialog(null,"录入完毕");
+							          ll.setVisible(false);
+						          }
+						      }
+						}
+						}
+						catch(Exception e3)
+						{
+							
+						}
+					}
+				});
+			}
+		});
+		
+		check.add(p2);
+		
+	}
+}

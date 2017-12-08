@@ -1,0 +1,206 @@
+
+package 操作码;
+
+import javax.swing.*;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+public class c1 implements ActionListener{
+	public static JFrame jj=new JFrame();
+	public static double s1[]=new double[27];
+	static int count=0;
+	static JPanel jp=new JPanel();
+	static JTextField t1=new JTextField(20);
+	static JTextField t2=new JTextField(20);
+	static JTextField t3=new JTextField(20);
+	static JTextField t4=new JTextField(20);
+	static JTextField t5=new JTextField(20);
+	static JLabel l1=new JLabel("操作数总数");
+	static JLabel l2=new JLabel("操作数序号");
+	static JLabel l3=new JLabel("对应概率");
+	static JLabel l4=new JLabel("选择编码方式");
+	static JLabel l5=new JLabel("需要编码的单词");
+	static JTextArea a1=new JTextArea();
+	static JLabel l6=new JLabel("操作数对应编码");
+	static JTextField t6=new JTextField(50);
+	static JLabel l7=new JLabel("单词对应编码");
+	static JButton b1=new JButton("录入");
+	static JButton b2=new JButton("开始运行");
+	static JLabel lb=new JLabel("录入总数");
+	static JLabel lb2=new JLabel("0");
+
+	public static double total=0;
+	public static void main(String args[])
+	{
+		jj.setSize(500,500);
+		jj.add(jp);
+		jj.setTitle("转化器");
+		jj.setVisible(true);
+		jp.setVisible(true);
+		jp.setLayout(null);
+		
+		t1.setBounds(110,10,110,20);
+		l1.setBounds(10,10,90,20);
+		jp.add(t1);
+		jp.add(l1);
+		
+		t2.setBounds(110,50,110,20);
+		l2.setBounds(10,50,90,20);
+		jp.add(t2);
+		jp.add(l2);
+		
+		t3.setBounds(110,90,110,20);
+		l3.setBounds(10,90,90,20);
+		jp.add(t3);
+		jp.add(l3);
+		
+		t4.setBounds(110,130,110,20);
+		l4.setBounds(10,130,90,20);
+		jp.add(t4);
+		jp.add(l4);
+		
+		t5.setBounds(110,170,110,20);
+		l5.setBounds(10,170,100,20);
+		jp.add(t5);
+		jp.add(l5);
+		
+		t6.setBounds(270,160,190,20);
+		l7.setBounds(270,140,100,20);
+		jp.add(t6);
+		jp.add(l7);
+		
+		b1.setBounds(270,50,100,20);
+		lb.setBounds(270,80,190,20);
+		lb2.setBounds(270,110,190,20);
+		b2.setBounds(270,190,100,20);
+		jp.add(b1);
+		jp.add(lb);
+		jp.add(lb2);
+		jp.add(b2);
+		
+		l6.setBounds(10,210,100,20);
+		jp.add(l6);
+		
+		a1.setBounds(10,230,460,200);
+		jp.add(a1);
+		
+		b1.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		input();
+        	}
+		});
+		
+		b2.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		calculate();
+        	}
+		});
+		
+
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	
+	public static void input()
+	{
+		int ip[]=new int[27];
+		if(count==0)
+		{
+			for(int x=1;x<27;x++)
+			{
+				ip[x]=0;
+				s1[x]=0;
+			}
+			count=count+1;
+			total=0;
+		}
+		
+		else{
+			total=0;
+			for(int x=1;x<27;x++)
+			{
+				total=total+s1[x];
+			}
+		if(ip[Integer.parseInt(t2.getText())]==0)
+		{
+			
+			if((int)(total+Double.parseDouble(t3.getText()))<=1){
+		s1[Integer.parseInt(t2.getText())]=Double.parseDouble(t3.getText());
+		total=0;
+		for(int x=1;x<27;x++)
+		{
+			total=total+s1[x];
+		}
+		a1.append(Integer.parseInt(t2.getText())+"的概率为"+s1[Integer.parseInt(t2.getText())]+"\n"+"总概率为"+total+"\n");
+		count++;
+		lb2.setText(Integer.toString(count-1));
+		ip[Integer.parseInt(t2.getText())]=1;
+		    }
+			else
+			{
+			JOptionPane.showMessageDialog(a1, ip, "wrong", 1);
+			}
+		}
+		else
+		{
+			total=total-s1[Integer.parseInt(t2.getText())];
+			if((int)(total+Double.parseDouble(t3.getText()))<=1){
+		s1[Integer.parseInt(t2.getText())]=Double.parseDouble(t3.getText());
+		total=0;
+		for(int x=1;x<27;x++)
+		{
+			total=total+s1[x];
+		}
+		a1.append(Integer.parseInt(t2.getText())+"的概率更改为"+s1[Integer.parseInt(t2.getText())]+"\n"+"总概率为"+total+"\n");
+		}
+			else
+			{
+				JOptionPane.showMessageDialog(a1, ip, "wrong", 1);
+			}
+	}
+		}
+	}
+	public static void calculate()
+	{
+		String rs[]=new String[27];
+		for(int x=0;x<27;x++)
+		{
+			rs[x]="";
+		}
+		while(count>0)
+		{
+		 double max=0;
+		 int stick=0;
+		 for(int x=1;x<27;x++)
+		 {
+			if(s1[x]>max) {max=s1[x];stick=x;} 
+		 }
+		 s1[stick]=0;
+		 for(int x=1;x<27;x++)
+		 {
+			 if(x!=stick) rs[x]=rs[x]+"1";
+			 else rs[x]=rs[x]+"0";
+		 }
+		 count--;
+		}
+		a1.setText(" ");
+		for(int x=1;x<27;x++)
+		{
+		a1.append((char)('a'+x-1)+"字母的编码为"+rs[x]+"\n");
+		}
+		char st[];
+		st=t5.getText().toCharArray();
+		String result="";
+		for(int x=0;x<st.length;x++)
+		{
+			result=result+rs[st[x]-'a'+1];
+		}
+		t6.setText(result);
+	}
+}

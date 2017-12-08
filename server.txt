@@ -1,0 +1,132 @@
+package chatonline;
+
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.net.*;
+import java.awt.event.*;
+import java.sql.*;
+import java.util.Random;
+
+import javax.swing.*;
+public class server {
+	public static String result="";
+	class customer
+	{
+		String name;
+		String sex;
+		String product;
+	}
+	static customer[] cs=new customer[100];
+	static int stick=0;
+	  public static void answer(String nr,String kind)
+	  {
+		  String result1="";
+		  if(kind.equals("ÎÄ×Ö"))
+			  result1="receive the question for"+nr;
+		  else if(kind.equals("±íÇé"))
+			  result1="picture#temp";
+		  result=result1;
+	  }
+	  
+  public static void main(String args[]) throws IOException {
+	  ServerSocket ss1=new ServerSocket(8888);
+
+	  JFrame jj1=new JFrame();
+		JPanel jp=new JPanel();
+		jp.setLayout(null);
+		
+		jj1.setTitle("Chat client");
+		jj1.setSize(400,400);
+		
+		JLabel l1=new JLabel("result");
+		l1.setBounds(10,10,50,50);
+		jp.add(l1);
+		
+		JTextArea t1=new JTextArea("");
+		t1.setBounds(50,80,300,200);
+		jp.add(t1);
+		
+        JButton b5=new JButton("exit");
+		b5.setBounds(300,300,80,80);
+		jp.add(b5);
+		
+		b5.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				System.exit(1);
+			}
+		});
+		
+		jj1.add(jp);
+		jj1.setVisible(true);
+		
+		
+	
+	  Socket sockets=ss1.accept();
+	  String ca=sockets.getInetAddress().getHostAddress();
+	  jj1.setTitle("client"+ca+"connect");
+
+		
+	  
+	  
+	  JLabel l2=new JLabel("neirong");
+	  l2.setBounds(10,10,20,20);
+	  jp.add(l2);
+	  JTextArea a1=new JTextArea();
+	  a1.setBounds(50,50,100,50);
+	  jp.add(a1);
+		
+	  Socket clientSocket = null;
+	  DataOutputStream out = null;
+      BufferedReader in = null;
+	    int received=0;
+      while(true)
+      {
+    	  received=0;
+	    	clientSocket=ss1.accept();
+	    	String str1[];
+	    	String sd;
+	    	
+			
+			String str;
+	    	String[] str2;
+	    try {
+	    	InputStream in1=sockets.getInputStream();
+			BufferedReader br=new BufferedReader(new InputStreamReader(in1));
+			in1=clientSocket.getInputStream();
+			br=new BufferedReader(new InputStreamReader(in1));
+			str=br.readLine();
+			str1=str.split("\\$");
+			str2=str1[1].split("\\#");
+			t1.append(str1[0]+"\n"+str2[0]+"\n"+str2[1]+"\n");
+			received=1;
+			result="198989";
+			answer(str1[0],str2[1]);
+			t1.append(result);
+	    } catch (IOException e) {
+	        System.err.println("Accept failed.");
+	        System.exit(1);
+	    }
+	    if(received==1)
+	    {
+	    	OutputStream os=sockets.getOutputStream();
+			PrintStream ps=new PrintStream(os);
+			os=clientSocket.getOutputStream();
+			ps=new PrintStream(os);
+			sd=result;
+			ps.println(sd);
+			received=0;
+	    }
+      }
+}
+
+  
+}

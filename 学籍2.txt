@@ -1,0 +1,817 @@
+package system;
+
+import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+import java.io.*;
+
+public class client {
+	static JFrame lg=new JFrame();
+	static JFrame reg=new JFrame();
+	JFrame mf=new JFrame();
+	JFrame score=new JFrame();
+	static JPanel l1=new JPanel();
+	static JPanel l2=new JPanel();
+	JPanel l3=new JPanel();
+	JPanel l4=new JPanel();
+	static int logins=0;
+	static String op6="姓名";
+	
+	static JTextField f3=new JTextField(60);
+	static JTextField f4=new JTextField(60);
+	static JTextField f5=new JTextField(60);
+	static JTextField f6=new JTextField(60);
+	static JTextField f7=new JTextField(60);
+	static String op="按升序";
+	
+	
+	public static class st
+	{
+		public String name;
+		public String no;
+		public String password;
+		public String cs;
+		public int root;
+		st(){}
+		public String[] gd=new String[5];
+		public int[] score=new int[5];
+	}
+
+	public static st student[]=new st[109];
+	
+	public static st temp=new st();
+	public static int stick=0;
+	public static int cursor=0;
+	static JLabel hd=new JLabel();
+	public static String path="F://QQ_Favorite//temp.jpg";
+	public static void login()
+	{
+		try {
+		      Class.forName("com.mysql.jdbc.Driver");  
+		     System.out.println("Success loading Mysql Driver!");
+		    }
+		    catch (Exception e) {
+		      System.out.print("Error loading Mysql Driver!");
+		      e.printStackTrace();
+		    }
+		PreparedStatement Statement;
+		    try {
+		      Connection connect = DriverManager.getConnection(
+		          "jdbc:mysql://localhost:3306/mysql","root","121908");
+		      Statement=connect.prepareStatement("INSERT INTO student VALUES(?,?,?,?)");
+		    }
+		    catch (Exception e) {
+			      System.out.print("Error loading Mysql Driver!");
+			      e.printStackTrace();
+			    }
+
+		      int num=100;
+		lg.setSize(500,500);
+		l1.setLayout(null);
+		lg.setTitle("login");
+		
+		ImageIcon icon=new ImageIcon("F://keshe//1.jpg");
+		icon.setImage(icon.getImage().getScaledInstance(500,  
+                500, Image.SCALE_DEFAULT));
+		JLabel jp=new JLabel();
+		l1.setOpaque(false);
+		jp.setBounds(0,0,500,500);
+		jp.setHorizontalAlignment(0);
+		jp.setIcon(icon);
+
+		JLabel l2=new JLabel("学号");
+		JLabel l3=new JLabel("密码");
+		final JTextField f1=new JTextField(50);
+		final JTextField f2=new JTextField(50);
+		JButton b1=new JButton("登录");
+		l2.setBounds(10,10,60,30);
+		f1.setBounds(100,10,130,30);
+		b1.setBounds(290,50,100,30);
+		l3.setBounds(10,90,60,30);
+		f2.setBounds(100,90,130,30);
+		jp.add(l2);
+		jp.add(l3);
+		jp.add(b1);
+		jp.add(f1);
+		jp.add(f2);
+		
+		JLabel l4=new JLabel("姓名");
+		JLabel l5=new JLabel("学号");
+		JLabel l6=new JLabel("班级");
+		JLabel l7=new JLabel("密码");
+		l7.setForeground(Color.white);
+		JLabel l8=new JLabel("再输入密码");
+		l8.setForeground(Color.white);
+		
+		JLabel l9=new JLabel("注册板块");
+		l9.setBounds(10,150,100,60);
+		l9.setFont(new Font("宋体",Font.BOLD, 23));
+		jp.add(l9);
+		
+		JLabel pc=new JLabel("选择图片");
+		final JLabel pcs=new JLabel();
+		JButton sc=new JButton("文件选择");
+		ImageIcon isc=new ImageIcon("F:\\QQ_Favorite\\4.jpg");  
+        isc.setImage(isc.getImage().getScaledInstance(100, 130,  
+                Image.SCALE_DEFAULT)); 
+		pcs.setIcon(isc);
+		pc.setBounds(250,210,100,30);
+		pcs.setBounds(360,210,100,130);
+		sc.setBounds(250,260,100,30);
+		jp.add(pc);
+		jp.add(pcs);
+		jp.add(sc);
+		
+		sc.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				JFileChooser jfc=new JFileChooser();  
+		        jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES );  
+		        jfc.showDialog(new JLabel(), "选择");  
+		        File file=jfc.getSelectedFile();  
+		        ImageIcon ics1=new ImageIcon(file.getAbsolutePath());
+		        ics1.setImage(ics1.getImage().getScaledInstance(100, 130,  
+		                Image.SCALE_DEFAULT));
+		        pcs.setIcon(ics1);
+		        path=file.getAbsolutePath();
+		        JOptionPane.showMessageDialog(null,path);
+		        
+			}
+		});
+		
+		l4.setBounds(10,210,60,30);
+		l5.setBounds(10,260,60,30);
+		l6.setBounds(10,310,60,30);
+		l7.setBounds(10,360,60,30);
+		l8.setBounds(10,410,100,30);
+		
+		f3.setBounds(100,210,130,30);
+		f4.setBounds(100,260,130,30);
+		f5.setBounds(100,310,130,30);
+		f6.setBounds(100,360,130,30);
+		f7.setBounds(100,410,130,30);
+		
+		JButton b2=new JButton("注册");
+		JButton b3=new JButton("退出");
+		
+		b2.setBounds(380,370,100,30);
+		b3.setBounds(380,410,100,30);
+		
+		
+		jp.add(b2);
+		jp.add(b3);
+		
+		jp.add(l4);
+		jp.add(l5);
+		jp.add(l6);
+		jp.add(l7);
+		jp.add(l8);
+		
+		jp.add(f3);
+		jp.add(f4);
+		jp.add(f5);
+		jp.add(f6);
+		jp.add(f7);
+		
+		lg.add(l1);
+		lg.add(jp);
+		
+		lg.setVisible(true);
+		
+		b3.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				System.exit(1);
+			}
+		});
+		
+		b2.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				try {
+				      Class.forName("com.mysql.jdbc.Driver");  
+				     System.out.println("Success loading Mysql Driver!");
+				    }
+				    catch (Exception es2) {
+				      System.out.print("Error loading Mysql Driver!");
+				      es2.printStackTrace();
+				    }
+				PreparedStatement Statement = null;
+				Statement stmt = null;
+				    try {
+				      Connection connect = DriverManager.getConnection(
+				          "jdbc:mysql://localhost:3306/mysql","root","121908");
+				      Statement=connect.prepareStatement("INSERT INTO student VALUES(?,?,?,?)");
+				      stmt= connect.createStatement();
+				    }
+				    catch (Exception es) {
+					      System.out.print("Error loading Mysql Driver!");
+					      es.printStackTrace();
+					    }
+				    String sql = "select * from student";
+				       
+				      ResultSet rs = null;
+					
+				      
+				    
+				if(f7.getText().equals(f6.getText())==false)
+					JOptionPane.showMessageDialog(null, "密码不等");
+				else
+				{
+					int judge=0;
+					for(int x=0;x<stick;x++)
+					{
+						if(student[x].name.equals(f3.getText())==true)
+							judge=1;
+					}
+					if(judge==1)
+					{
+						JOptionPane.showMessageDialog(null, "此名字已注册");
+					}
+					else
+					{
+						
+							student[stick].name=f3.getText();
+							student[stick].no=f4.getText();
+							student[stick].cs=f5.getText();
+							student[stick].password=f6.getText();
+							try {
+								Statement.setString(1,student[stick].no);
+								Statement.setString(2,student[stick].name);
+								Statement.setString(3,student[stick].password);
+								Statement.setString(4,student[stick].cs);
+								stick++;
+						        Statement.executeUpdate();
+						        try {
+									rs = stmt.executeQuery(sql);
+									int tpp=stick;
+									while(rs.next())
+								      {
+								    	  student[tpp].no=rs.getString(1);
+								    	  student[tpp].name=rs.getString(2);
+								    	  student[tpp].password=rs.getString(3);
+								    	  student[tpp].cs=rs.getString(4);
+								    	 tpp++;
+								      }
+								} catch (SQLException e2) {
+									// TODO Auto-generated catch block
+									e2.printStackTrace();
+								}
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+					           try
+					           {
+					        	   Connection connect = DriverManager.getConnection(
+									          "jdbc:mysql://localhost:3306/mysql","root","121908");
+									      Statement=connect.prepareStatement("INSERT INTO photo VALUES(?,?)");
+									      Statement.setString(1, f4.getText());
+									      Statement.setString(2, path);
+									      Statement.executeUpdate();
+					           }
+					           catch(Exception e10)
+					           {
+					        	   e10.printStackTrace();
+					           }
+							JOptionPane.showMessageDialog(null, student[stick].name+"   "+student[stick].password);
+						stick++;
+						JOptionPane.showMessageDialog(null, "注册成功，请登录");
+						try {
+							int tppp=stick;
+							while(rs.next())
+							  {
+								  student[tppp].no=rs.getString(1);
+								  student[tppp].name=rs.getString(2);
+								  student[tppp].password=rs.getString(3);
+								  student[tppp].cs=rs.getString(4);
+								  tppp++;
+							  }
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+		});
+		
+		b1.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				int x=0;
+				int judge=0;
+				int temps=0;
+				while(x<=stick)
+				{
+					System.out.println(student[x].no+"   "+student[x].password);
+					if(student[x].no.equals(f1.getText())==false)
+						x++;
+					else if(student[x].password.equals(f2.getText())==false)
+						{JOptionPane.showMessageDialog(null, "密码错误，请重新输入");
+						judge=1;
+
+						x=stick+3;
+						}
+					else {judge=2;temps=x;x=stick+2;}
+				}
+				if(judge==0)
+					JOptionPane.showMessageDialog(null, "用户不存在");
+				else if(judge==2)
+				{
+					JOptionPane.showMessageDialog(null, "登陆成功");
+					cursor=temps;
+					temp=student[cursor];
+					lg.setVisible(false);
+					reg.setVisible(true);
+					try
+			           {
+			        	   Connection connect = DriverManager.getConnection(
+							          "jdbc:mysql://localhost:3306/mysql","root","121908");
+			        	   String sql="select * from photo where no="+student[temps].no;
+			        	   Statement stmt=connect.createStatement();
+			        	   ResultSet rs=stmt.executeQuery(sql);
+			        	   while(rs.next())
+			        	   {
+			        		   path=rs.getString(2);
+			        	   }
+					mainface();
+					
+			           }
+					
+					catch(Exception e11)
+					{
+						e11.printStackTrace();
+					}
+					hd.setIcon(new ImageIcon(path));
+				}
+			}
+		});
+	}
+	
+	public static void mainface()
+	{
+		temp=student[cursor];
+		reg.setTitle("主界面");
+		reg.setSize(700,700);
+		l2.setLayout(null);
+		ImageIcon icon=new ImageIcon("F://keshe//2.jpg");
+		icon.setImage(icon.getImage().getScaledInstance(700,  
+               700, Image.SCALE_DEFAULT));
+		JLabel jl1=new JLabel();
+		l1.setOpaque(false);
+		jl1.setBounds(0,0,700,700);
+		jl1.setHorizontalAlignment(0);
+		jl1.setIcon(icon);
+		
+		JLabel hdh=new JLabel("照片");
+		hdh.setBounds(10,10,80,30);
+		hdh.setForeground(Color.white);
+		hdh.setFont(new Font("宋体",Font.BOLD, 19));
+		jl1.add(hdh);
+		hd.setIcon(new ImageIcon(path));
+		hd.setBounds(10,50,200,180);
+		jl1.add(hd);
+		
+		JButton cl=new JButton("清屏");
+		cl.setBounds(260,100,80,100);
+		jl1.add(cl);
+		
+		JButton exits=new JButton("退出");
+		exits.setBounds(200,260,80,100);
+		jl1.add(exits);
+		
+		JButton jb2=new JButton("修改个人信息");
+		JButton jb3=new JButton("查询并显示成绩");
+		
+		jb2.setBounds(10,260,160,30);
+		jb3.setBounds(10,320,160,30);
+		
+		jl1.add(jb2);
+		jl1.add(jb3);
+		
+		String []chain={"按升序","按降序"};
+		JComboBox cb=new JComboBox(chain);
+		cb.setBounds(10,360,100,30);
+		jl1.add(cb);
+		
+		JLabel lp=new JLabel("个人信息");
+		lp.setBounds(10,400,100,30);
+		lp.setFont(new Font("宋体",Font.BOLD, 23));
+		lp.setForeground(Color.white);
+		jl1.add(lp);
+		
+		
+		
+		JLabel jl3=new JLabel("姓名： ");
+		JLabel jl4=new JLabel("学号： ");
+		JLabel jl5=new JLabel("班级： ");
+		final JLabel jl6=new JLabel(student[cursor].name);
+		final JLabel jl7=new JLabel(student[cursor].no);
+		final JLabel jl8=new JLabel(student[cursor].cs);
+		
+		jl3.setBounds(10,480,100,30);
+		jl3.setForeground(Color.white);
+		jl4.setBounds(10,540,100,30);
+		jl4.setForeground(Color.white);
+		jl5.setBounds(10,600,100,30);
+		jl5.setForeground(Color.white);
+		jl6.setBounds(80,480,100,30);
+		jl6.setForeground(Color.white);
+		jl7.setBounds(80,540,100,30);
+		jl7.setForeground(Color.white);
+		jl8.setBounds(80,600,100,30);
+		jl8.setForeground(Color.white);
+		
+		jl1.add(jl3);
+		jl1.add(jl4);
+		jl1.add(jl5);
+		jl1.add(jl6);
+		jl1.add(jl7);
+		jl1.add(jl8);
+		
+		
+		JLabel hd2=new JLabel("成绩显示");
+		final JTextArea a1=new JTextArea();
+		JScrollPane p1=new JScrollPane();
+		p1.setViewportView(a1);
+		hd2.setBounds(360,10,100,30);
+		hd2.setFont(new Font("宋体",Font.BOLD, 23));
+		hd2.setForeground(Color.white);
+		p1.setBounds(360,70,300,570);
+		jl1.add(p1);
+		jl1.add(hd2);
+		
+		cl.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				a1.setText("");
+			}
+		});
+		
+		exits.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e) {
+				System.exit(1);
+			}
+		});
+		
+		cb.addItemListener(new ItemListener()
+				{
+					public void itemStateChanged(ItemEvent e) {
+						if (e.getStateChange() == ItemEvent.SELECTED) {  
+							op=e.getItem().toString();
+						}
+					}
+				});
+		
+		
+		
+		
+		
+		final JFrame jfj=new JFrame();
+		JPanel jpj=new JPanel();
+		jpj.setLayout(null);
+		jfj.setSize(400,400);
+		jfj.setTitle("修改");
+		
+		JLabel lj2=new JLabel("修改项目");
+		JLabel lj3=new JLabel("修改值");
+		String []chain3={"姓名","班级","密码"};
+		JComboBox cb5=new JComboBox(chain3);
+		final JTextField f3=new JTextField(50);
+		lj2.setBounds(10,110,100,30);
+		lj3.setBounds(10,210,100,30);
+		cb5.setBounds(70,110,150,30);
+		f3.setBounds(70,210,150,30);
+		jpj.add(lj2);
+		jpj.add(lj3);
+		jpj.add(cb5);
+		jpj.add(f3);
+		
+		cb5.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {  
+					op6=e.getItem().toString();
+				}
+			}
+		});
+		
+		final JButton bj1=new JButton("修改");
+		final JButton bj2=new JButton("取消");
+		bj1.setBounds(50,260,100,30);
+		bj2.setBounds(150,260,100,30);
+		jpj.add(bj1);
+		jpj.add(bj2);
+		
+		jfj.add(jpj);
+		jfj.setVisible(false);
+		
+		jb2.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				
+				jfj.setVisible(true);
+				
+				bj2.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						jfj.setVisible(false);
+					}
+				});
+				
+				bj1.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						ResultSet rs;
+						String sql="null";
+						
+						
+						if(op6.equals("姓名")==true)
+						{
+							temp.name=f3.getText();
+							JOptionPane.showMessageDialog(null,"修改成功");
+							jfj.setVisible(false);
+							jl6.setText(temp.name);
+							try {
+								Connection connect = DriverManager.getConnection(
+								          "jdbc:mysql://localhost:3306/mysql","root","121908");
+								      System.out.println("Success");
+								      PreparedStatement Statement=connect.prepareStatement("update student set name=? where no=?");
+								      Statement.setString(1, temp.name);
+								      Statement.setString(2, temp.no);
+								      Statement.executeUpdate();
+							}
+							catch(Exception ess)
+							{
+								
+							}
+						}
+						else if(op6.equals("学号")==true)
+						{
+							String tptp=temp.no;
+							temp.no=f3.getText();
+							JOptionPane.showMessageDialog(null,"修改成功");
+							jfj.setVisible(false);
+							jl7.setText(temp.no);
+							try {
+							      Connection connect = DriverManager.getConnection(
+							          "jdbc:mysql://localhost:3306/mysql","root","121908");
+							      System.out.println("Success");
+							      PreparedStatement Statement=connect.prepareStatement("update student set no=? where no=?");
+							      Statement.setString(1, temp.no);
+							      Statement.setString(2, tptp);
+							      Statement.executeUpdate();
+							}
+							catch(Exception ess)
+							{
+								
+							}
+						}
+						else if(op6.equals("班级")==true)
+						{
+							temp.cs=f3.getText();
+							JOptionPane.showMessageDialog(null,"修改成功");
+							jfj.setVisible(false);
+							jl8.setText(temp.cs);
+							try {
+							      Connection connect = DriverManager.getConnection(
+							          "jdbc:mysql://localhost:3306/mysql","root","121908");
+							      System.out.println("Success");
+							      PreparedStatement Statement=connect.prepareStatement("update student set cs=? where no=?");
+							      Statement.setString(1, temp.cs);
+							      Statement.setString(2, temp.no);
+							      Statement.executeUpdate();
+							}
+							catch(Exception ess)
+							{
+								
+							}
+						}
+						else if(op6.equals("密码")==true)
+						{
+							temp.password=f3.getText();
+							JOptionPane.showMessageDialog(null,"修改成功");
+							jfj.setVisible(false);
+							try {
+							      Connection connect = DriverManager.getConnection(
+							          "jdbc:mysql://localhost:3306/mysql","root","121908");
+							      System.out.println("Success");
+							      PreparedStatement Statement=connect.prepareStatement("update student set password=? where no=?");
+							      Statement.setString(1, temp.password);
+							      Statement.setString(2, temp.no);
+							      Statement.executeUpdate();
+							}
+							catch(Exception ess)
+							{
+								
+							}
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(null,"此项目不存在");
+						}
+					}
+				});
+			}
+		});
+		
+		jb3.addActionListener(new ActionListener()
+		{
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				int rs=0;
+				try {
+				      Connection connect = DriverManager.getConnection(
+				          "jdbc:mysql://localhost:3306/mysql","root","121908");
+				      System.out.println("Success");
+				      String sql = "select * from mark where no="+student[cursor].no;
+				      Statement stmt = connect.createStatement();
+				      ResultSet rst = stmt.executeQuery(sql);
+				      int sts[][]=new int[100][5];
+				      while(rst.next())
+				      {
+				    	  temp.score[0]=rst.getInt(2);
+				    	  temp.score[1]=rst.getInt(3);
+				    	  temp.score[2]=rst.getInt(4);
+				    	  temp.score[3]=rst.getInt(5);
+				    	  temp.score[4]=rst.getInt(6);
+				      }
+				    }
+				    catch (Exception qe) {
+					      System.out.print("Error loading Mysql Driver!");
+					      qe.printStackTrace();
+				    }
+				temp=student[cursor];
+				a1.append("");
+				if(op.equals("按升序")==true){
+				int temps[]=new int[5];
+				for(int x=0;x<5;x++)
+					temps[x]=0;
+				for(int x=0;x<5;x++)
+				{
+					int min=999;
+					int cur=0;
+					for(int y=0;y<5;y++)
+					{
+						if(temp.score[y]<=min) {cur=y;min=temp.score[y];}
+					}
+					a1.append(temp.gd[cur]+"   "+"score:"+temp.score[cur]+"\n");
+					rs=rs+temp.score[cur];System.out.println(rs);
+					temps[cur]=temp.score[cur];
+					temp.score[cur]=9999;
+				}
+				student[cursor]=temp;
+				a1.append("总分："+rs+"\n");
+				a1.append("平均分："+rs/5+"\n");
+				for(int x=0;x<5;x++)
+					temp.score[x]=temps[x];
+				int pas=0;
+				for(int x=0;x<5;x++)
+				{
+					if(temp.score[x]>=60) pas++;
+				}
+				a1.append("通过率："+pas*100/5+"%"+"\n");
+				
+				}
+				else if(op.equals("按降序")==true)
+				{
+					
+					a1.append("");
+					int temps[]=new int[5];
+					for(int x=0;x<5;x++)
+						temps[x]=0;
+					for(int x=0;x<5;x++)
+					{
+						int max=0;
+						int cur=0;
+						for(int y=0;y<5;y++)
+						{
+							if(temp.score[y]>=max) {cur=y;max=temp.score[y];}
+						}
+						a1.append(temp.gd[cur]+"   "+"score:"+temp.score[cur]+"\n");
+						rs=rs+temp.score[cur];System.out.println(rs);
+						temps[cur]=temp.score[cur];
+						temp.score[cur]=0;
+					}
+					student[cursor]=temp;
+					a1.append("总分："+rs+"\n");
+					a1.append("平均分："+rs/5+"\n");
+					for(int x=0;x<5;x++)
+						temp.score[x]=temps[x];
+					int pas=0;
+					for(int x=0;x<5;x++)
+					{
+						if(temp.score[x]>=60) pas++;
+					}
+					a1.append("通过率："+pas*100/5+"%"+"\n");
+					}
+				try
+				{
+					 Connection connect = DriverManager.getConnection(
+					          "jdbc:mysql://localhost:3306/mysql","root","121908");
+					      System.out.println("Success");
+					      String sql = "select * from mark";
+					      Statement stmt = connect.createStatement();
+					      ResultSet rst = stmt.executeQuery(sql);
+					      int ct4=0;
+					      int ct5=1;
+					      int sts[][]=new int[100][5];
+					      while(rst.next())
+					      {
+					    	  for(int x=0;x<5;x++)
+					    	  {
+					    		  sts[ct4][x]=rst.getInt(x+2);
+					    	  }
+					    	  ct4++;
+					      }
+					      for(int x=0;x<ct4;x++)
+					      {
+					    	  if(rs<sts[x][0]+sts[x][1]+sts[x][2]+sts[x][3]+sts[x][4])
+					    		  ct5++;
+					      }
+					      a1.append("该成绩排名"+(ct5)+"\n");
+					      
+				}
+				catch(Exception e13)
+				{
+					e13.printStackTrace();
+				}
+			}
+		});
+		
+		l2.add(jl1);
+		reg.add(l2);
+		
+	}
+	
+	public static void main(String args[])
+	{
+		
+		for(int x=0;x<5;x++)
+			temp.score[x]=70+x;
+		for(int x=0;x<100;x++)
+			student[x]=new st();
+		for(int x=0;x<100;x++){
+			student[x].root=0;
+			student[x].gd[0]="语文";
+			student[x].gd[1]="数学";
+			student[x].gd[2]="英语";
+			student[x].gd[3]="政治";
+			student[x].gd[4]="历史";}
+		student[0].no="0020203";
+		student[0].password="0020203";
+		student[1].no="020201";
+		student[1].password="020201";
+		temp.name="abcd";
+		temp.no="13232323";
+		temp.cs="abdhef";
+		try {
+		      Class.forName("com.mysql.jdbc.Driver");  
+		     System.out.println("Success loading Mysql Driver in logins!");
+		    }
+		    catch (Exception e) {
+		      System.out.print("Error loading Mysql Driver in logins!");
+		      e.printStackTrace();
+		    }
+		    try {
+		      Connection connect = DriverManager.getConnection(
+		          "jdbc:mysql://localhost:3306/mysql","root","121908");
+		      System.out.println("Success");
+		      String sql = "select * from student";
+		      Statement stmt = connect.createStatement();
+		      ResultSet rs = stmt.executeQuery(sql);
+		      while(rs.next())
+		      {
+		    	  student[stick].no=rs.getString(1);
+		    	  student[stick].name=rs.getString(2);
+		    	  student[stick].password=rs.getString(3);
+		    	  student[stick].cs=rs.getString(4);
+		    	  stick++;
+		      }
+		    }
+		    catch (Exception e) {
+			      System.out.print("Error loading Mysql Driver!");
+			      e.printStackTrace();
+		    }
+		    for(int q=0;q<stick;q++)
+		System.out.println(student[q].no+"  "+student[q].name+"   "+student[q].password+"   "+student[q].cs+"\n");
+		login();
+		System.out.println(cursor);
+
+	}
+}
+//finish
+

@@ -1,0 +1,514 @@
+package scanner;
+
+import javax.swing.*;
+import javax.swing.event.*;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.DatagramSocketImpl;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
+
+public class scan extends Thread implements Runnable,ActionListener{
+	public static int exit=0;
+    static JButton l1 = new JButton("开始扫描");
+    static JTextField ip1 = new JTextField(null);
+    static JTextArea t1 = new JTextArea();
+    static ActionListener arg0 = null;
+    static ActionListener arg1 = null; 
+    static JTextField ip22 = new JTextField(null);
+    static JLabel ip2 = new JLabel("end IP:");
+    static JLabel ip3 = new JLabel("start port:");
+    static JTextField ip33 = new JTextField(20);
+    static JLabel ip4 = new JLabel("end port:");
+    static JTextField ip44 = new JTextField(20);
+    static JLabel ip5 = new JLabel("pattern choose:");
+    static JLabel p1 = new JLabel("It has 4 patterns");
+    static JTextField ip55 = new JTextField(20);
+    static JTextArea t2 = new JTextArea("");
+    static JProgressBar pb1=new JProgressBar();
+    static JProgressBar pb2=new JProgressBar();
+    static JButton l2 = new JButton("保存扫描结果");
+    static JButton l3=new JButton("清空所有结果");
+    static JLabel p66=new JLabel("已扫描时间");
+    static JLabel p77=new JLabel("扫描进度");
+    static JLabel p88=new JLabel("域名转化为ip");
+    static JTextField p9=new JTextField(30);
+    static JTextField p91=new JTextField(30);
+    static JButton b4=new JButton("转化");
+    static JButton l4=new JButton("停止扫描");
+    static JLabel p99=new JLabel("threads number:");
+    static JTextField p100=new JTextField(30);
+    static int x=0;
+    static int count=0;
+    static int a,b,choose;
+    static String q,p;
+    static int already=0;
+    static JFrame frame = new JFrame("scanner");
+    static JButton b5=new JButton("停止扫描");
+    public scan(int a,int b,String q,String p,int choose)
+    {
+    	this.a=a;
+    	this.b=b;
+    	this.q=q;
+    	this.p=p;
+    	this.choose=choose;
+    }
+	public static void main(String[] args) {    
+        // 创建 JFrame 实例
+        
+        frame.setSize(1000, 800);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel panel = new JPanel();    
+        frame.add(panel);
+        
+        placeComponents(panel);
+
+        frame.setVisible(true);
+    }
+    private static void placeComponents(JPanel panel) {
+
+        panel.setLayout(null);
+
+        final JLabel ip11 = new JLabel("start IP:");
+
+        ip11.setBounds(10,20,80,25);
+        panel.add(ip11);
+
+
+        ip1.setBounds(130,20,165,25);
+        panel.add(ip1);
+        ip1.setText("");
+
+
+        ip2.setBounds(10,50,80,25);
+        panel.add(ip2);
+
+
+        ip22.setBounds(130,50,165,25);
+        panel.add(ip22);
+        ip22.setText("");
+
+
+        ip3.setBounds(10,80,80,25);
+        panel.add(ip3);
+
+
+        ip33.setBounds(130,80,165,25);
+        panel.add(ip33);
+        ip33.setText("1");
+        
+
+        ip4.setBounds(10,110,80,25);
+        panel.add(ip4);
+
+
+        ip44.setBounds(130,110,165,25);
+        panel.add(ip44);
+        ip44.setText("2");
+        
+
+        ip5.setBounds(10,140,180,25);
+        panel.add(ip5);
+        
+
+        ip55.setBounds(130,140,165,25);
+        panel.add(ip55);
+        
+
+        p1.setBounds(10,210,150,25);
+        panel.add(p1);
+        
+        l4.setBounds(250,400,110,30);
+        panel.add(l4);
+        
+        JLabel p2 = new JLabel("1/TCP connect(scan port)");
+        p2.setBounds(10,230,150,25);
+        panel.add(p2);
+        
+        JLabel p3 = new JLabel("2/TCP SYN(scan port)");
+        p3.setBounds(10,250,150,25);
+        panel.add(p3);
+        
+        JLabel p4 = new JLabel("3/ICPM echo(scan IP)");
+        p4.setBounds(10,270,150,25);
+        panel.add(p4);
+        
+        JLabel p8=new JLabel("4/scan the special port in the ips");
+        p8.setBounds(160,270,200,25);
+        panel.add(p8);
+        
+        JLabel p5 = new JLabel("warning:don't used to hack");
+        p5.setBounds(10,310,250,25);
+        panel.add(p5);
+        
+        JLabel p6 = new JLabel("扫描信息");
+        p6.setBounds(450,10,250,25);
+        panel.add(p6);
+        
+        JLabel p7 = new JLabel("扫描结果");
+        p7.setBounds(450,310,250,25);
+        panel.add(p7);
+        
+        p99.setBounds(10,170,250,25);
+        panel.add(p99);
+        
+        p100.setBounds(130,170,165,25);
+        panel.add(p100);
+        
+        JScrollPane j1=new JScrollPane();
+        JScrollPane j2=new JScrollPane();
+        j1.setViewportView(t1);
+        j2.setViewportView(t2);
+        j1.setBounds(450,40,450,250);
+        panel.add(j1);
+        
+
+        j2.setBounds(450,340,450,350);
+        panel.add(j2);
+        
+
+        l1.setBounds(10, 410,180, 25);
+        panel.add(l1);
+        
+        l3.setBounds(10,460,180,25);
+        panel.add(l3);
+
+        p66.setBounds(10,540,180,25);
+        panel.add(p66);
+        
+        pb1.setBounds(10,560,350,25);
+        pb1.setBorderPainted(true);  
+        pb1.setString("loading...");  
+        pb1.setStringPainted(true);
+        pb1.setMinimum(0);
+        pb1.setMaximum(200);
+        panel.add(pb1);
+        
+        
+        pb1.setIndeterminate(false);
+        
+        p88.setBounds(10,630,180,25);
+        panel.add(p88);
+        
+        p9.setBounds(10,660,300,25);
+        p91.setBounds(10,690,300,25);
+        panel.add(p9);
+        panel.add(p91);
+        
+        b4.setBounds(320,675,100,25);
+        panel.add(b4);
+        
+        b4.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		try {
+					exchange();
+				} catch (UnknownHostException e1) {
+					e1.printStackTrace();
+				}
+        	}
+        });
+        
+        l1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+        		if(ip1.getText().equals("")||ip22.getText().equals(""))
+        		{
+        			JOptionPane.showMessageDialog(null,"please input ip","提示1",JOptionPane.ERROR_MESSAGE);
+        		}
+        		else if(ip33.getText().equals("")||ip44.getText().equals(""))
+        		{
+        			JOptionPane.showMessageDialog(null,"please input port","提示2",JOptionPane.ERROR_MESSAGE);
+        		}
+        		
+        		else
+        		{
+        			String[] sp1=ip1.getText().split("\\.");
+            		String[] sp2=ip22.getText().split("\\.");
+            		int last=Integer.parseInt(sp1[3]);
+            		int lastp=Integer.parseInt(sp2[3]);
+            		String temp1=sp1[0]+"."+sp1[1]+"."+sp1[2];
+            		String temp2=sp2[0]+"."+sp2[1]+"."+sp2[2];
+        		if(last>lastp||temp1==temp2)
+        		{
+        			JOptionPane.showMessageDialog(ip1, "fault ip");
+        		}
+        		else
+        		{
+        			if(Integer.parseInt(ip33.getText())>Integer.parseInt(ip44.getText()))
+        			{
+        				JOptionPane.showMessageDialog(ip1, "fault port");
+        			}
+        			else
+        			{
+            	exit=1;
+            save();
+            }}
+            }
+            }
+      });
+        
+        l3.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		
+        		t2.setText("");
+        	}
+        });
+        
+        l4.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		clear();
+        	}
+        });
+        
+
+        l2.setBounds(10, 360,180, 25);
+        panel.add(l2);
+
+        l2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            try {
+				output();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            }
+      });
+		
+		JTextArea a3=new JTextArea();
+    }
+    
+    public static void clear()
+    {
+    	t1.setText("");
+    	t2.setText("");
+    	exit=0;
+    }
+    
+    public static void save()
+    {
+        t1.append("要扫描的ip起始为   "+ip1.getText()+"\n");
+        t1.append("要扫描的ip结束为   "+ip22.getText()+"\n");
+        t1.append("要扫描的端口开始为   "+ip33.getText()+"\n");
+        t1.append("要扫描的端口结束为   "+ip44.getText()+"\n");
+        int x1=Integer.parseInt(ip33.getText());
+        int y1=Integer.parseInt(ip44.getText());
+        int z1=Integer.parseInt(ip55.getText());
+        int h1=Integer.parseInt(p100.getText());
+        int q=0;
+        while(q<h1){
+        	if(exit==1){
+        	if(z1==1||z1==2){
+        	t1.append("扫描进程"+q+"负责"+(y1-x1)*q/h1+","+(y1-x1)*(q+1)/h1+"\n");
+        new scan((y1-x1)*q/h1,(y1-x1)*(q+1)/h1,ip1.getText(),ip22.getText(),z1).start();}
+        	else if(z1==3||z1==4)
+        	{
+        		String[] sp1=ip1.getText().split("\\.");
+        		String[] sp2=ip22.getText().split("\\.");
+        		int last=Integer.parseInt(sp1[3]);
+        		int lastp=Integer.parseInt(sp2[3]);
+        		String temp1=Integer.toString((lastp-last)*q/h1).toString();
+        		String temp2=Integer.toString((lastp-last)*(q+1)/h1).toString();
+        		t1.append("扫描进程"+q+"负责"+sp1[0]+"."+sp1[1]+"."+sp1[2]+"."+temp1+','+sp1[0]+"."+sp1[1]+"."+sp1[2]+"."+temp2+"\n");
+        		new scan(x1,y1,sp1[0]+"."+sp1[1]+"."+sp1[2]+"."+temp1,sp1[0]+"."+sp1[1]+"."+sp1[2]+"."+temp2,z1).start();
+        		
+        	}
+        	q++;}
+        	else if(exit==0)
+        	{q=h1+1;}
+        }
+        new Thread(new Runnable() {
+        	public void run() {
+        		while(exit==1){
+        		int i=0;
+                while(exit==1) {
+                    pb1.setValue(++i);
+                    pb1.setString("time "+i+"s running"); 
+                    
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    if(i>3600)
+                    {
+                    	pb1.setForeground(Color.green);
+                    	pb1.setValue(100);
+                    	pb1.setString("Overtime");
+                    }
+                }
+            }
+        	}
+        }).start();
+        }
+	public static void output() throws IOException
+    {
+    	String gt;
+    	gt=t2.getText()+"\n";
+        Writer w=new FileWriter("e:/rs.txt");
+        BufferedWriter buffWriter=new BufferedWriter(w);
+        
+        buffWriter.write(gt);
+         
+        buffWriter.close();
+        w.close();
+        JOptionPane.showMessageDialog(null, "写入完成", "信息", JOptionPane.INFORMATION_MESSAGE); 
+
+    }
+	
+	public static void exchange() throws UnknownHostException
+	{
+		InetAddress st;
+		st=InetAddress.getByName(p9.getText());
+		p91.setText(st.getHostAddress());
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void run() {
+		while(exit==1){
+		switch(choose)
+		{
+		case 1:
+		{
+		for(int i1=a;i1<b;i1++)
+		{
+			try{
+			Socket ss=new Socket(q,i1);
+			t2.append("ip为"+q+"的"+i1+"端口开放"+"\n");}
+			catch(Exception e)
+			{
+			t2.append("ip为"+q+"的"+i1+"端口关闭"+"\n");
+			}
+			finally
+			{
+				already++;
+				pb2.setValue(already/(b-a));
+				pb2.setString(already/(b-a)+"has been scan");
+			}
+			exit=0;
+		}
+		break;
+		}
+		case 2:
+		{
+			try {
+				synscan(q,p,a,b);
+			} catch (SocketException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			exit=0;
+		break;
+		}
+		case 3:
+		{
+		int timeOut=3000;
+		String[] sp1=q.split("\\.");
+		String[] sp2=p.split("\\.");
+		int last=Integer.parseInt(sp1[3]);
+		int lastp=Integer.parseInt(sp2[3]);
+		for(int i2=last;i2<lastp;i2++)
+		{
+			String temp=Integer.toString(i2);
+			String ipAddress=sp1[0]+"."+sp1[1]+"."+sp1[2]+"."+temp;
+			 String line = null;
+		        try
+		        {boolean status = InetAddress.getByName(ipAddress).isReachable(timeOut);     // 当返回值是true时，说明host是可用的，false则不可。
+		        if(status==true)
+		        {
+		        	t2.append("ip为"+ipAddress+"开启"+"\n");
+		        }
+		        else
+		        {
+		        	t2.append("ip为"+ipAddress+"关闭"+"\n");
+		        }
+		        } catch (Exception ex) {
+		           t2.append(ex.getMessage()+"\n");
+		        }
+		}
+		exit=0;
+		break;	
+		}
+		case 4:
+		{
+			String[] sp11=q.split("\\.");
+			String[] sp22=p.split("\\.");
+			int last1=Integer.parseInt(sp11[3]);
+			int lastp1=Integer.parseInt(sp22[3]);
+			for(int i2=last1;i2<lastp1;i2++)
+			{
+				String temp=Integer.toString(i2);
+			    String ipAddress=sp11[0]+"."+sp11[1]+"."+sp11[2]+"."+temp;
+			    t2.append("ip"+ipAddress+"端口开放情况"+"\n");
+			    try {
+					Socket s2=new Socket(ipAddress,a);
+					t2.append(a+" 开放"+"\n");
+				} catch (IOException e) {
+					t2.append(a+" 关闭"+"\n");
+				}
+			    
+			}
+			exit=0;
+		break;	
+		}
+		}
+		}
+	}
+	public void synscan(String q,String p,int a,int b) throws IOException//还没有做成功syn扫描
+	{
+		int []tip=new int[255];
+		for(int x=a;x<=b;x++)
+		{
+			tip[x]=0;
+			String line=null;
+		        try {
+		            Process pro2 = Runtime.getRuntime().exec("telnet " +q+" "+x);
+		            BufferedReader buf = new BufferedReader(new InputStreamReader(
+		                    pro2.getInputStream()));
+		            if((line=buf.readLine())==null) tip[x]=1;
+		            while ((line = buf.readLine()) != null)
+		                tip[x]=1;
+		        } catch (Exception ex) {
+		           t2.append(ex.getMessage()+"\n");
+		        }
+		}
+		for(int x=a;x<=b;x++)
+		{
+			if(tip[x]==0)t2.append("端口"+x+"在连接处失败"+"\n");
+			if(tip[x]==1)t2.append("端口"+x+"在连接处成功"+"\n");
+		}
+		
+		
+	}
+}
+
+
+
+
