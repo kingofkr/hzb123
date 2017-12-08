@@ -1,0 +1,346 @@
+package stack;
+
+import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
+import javax.swing.event.*;
+public class suanfa implements ActionListener{
+	public static JLabel l1=new JLabel("读取页面项数");
+	public static JLabel l3=new JLabel("读入页面号");
+	public static JLabel l4=new JLabel("总分配页面数");
+	public static JLabel l5=new JLabel("读取堆栈过程");
+	public static JTextField t1=new JTextField(20);
+	public static JTextField t3=new JTextField(20);
+	public static JTextField t4=new JTextField(20);
+	public static JTextArea t5=new JTextArea();
+	public static JButton b1=new JButton("录入");
+	public static JButton b2=new JButton("开始读取");
+	public static String[] option={"FIFO","OPT","LRU"};
+	public static int[] list=new int[255];
+	public static JComboBox c1=new JComboBox(option);
+	public static int count=1;
+	public static String state="FIFO";
+	public static void main(String args[])
+	{
+		JFrame j1=new JFrame();
+		j1.setSize(500,500);
+		j1.setVisible(true);
+		j1.setTitle("堆栈");
+		JPanel jp=new JPanel();
+		j1.add(jp);
+		jp.setLayout(null);
+		
+		l1.setBounds(10,10,100,30);
+		t1.setBounds(120,10,100,30);
+		jp.add(l1);
+		jp.add(t1);
+		
+		l3.setBounds(10,70,100,30);
+		t3.setBounds(120,70,100,30);
+		jp.add(l3);
+		jp.add(t3);
+		
+		l4.setBounds(10,130,100,30);
+		t4.setBounds(120,130,100,30);
+		jp.add(l4);
+		jp.add(t4);
+		
+		l5.setBounds(10,180,100,30);
+		JProgressBar jj=new JProgressBar();
+		t5.add(jj);
+		t5.setBounds(10,210,450,220);
+		jp.add(l5);
+		jp.add(t5);
+		
+		b1.setBounds(300,50,100,30);
+		b2.setBounds(300,100,100,30);
+		jp.add(b1);
+		jp.add(b2);
+		
+		c1.setBounds(300,150,100,30);
+		jp.add(c1);
+		
+		b1.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				input();
+			}
+
+		});
+		
+		b2.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				calculate();
+			}
+
+		});
+		
+		c1.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {  
+					state=e.getItem().toString();
+				}
+			}
+		});
+		
+	}
+	
+	public static void input()
+	{
+	    list[count]=Integer.parseInt(t3.getText());
+	    t5.append(" "+list[count]);
+	    if(count>Integer.parseInt(t1.getText()))
+	    	JOptionPane.showMessageDialog(b2, "wrong,the number of page is over");
+	    else count++;
+	}
+	
+	public static void calculate()
+	{
+		t5.append("\n");
+		if(count+1<Integer.parseInt(t1.getText()))
+			JOptionPane.showMessageDialog(b2, "wrong,the number of page is not enough");
+		else
+		{
+			switch(state)
+			{
+			case "FIFO":
+				{fifo();break;}
+			case "OPT":
+			    {opt();break;}
+			case "LRU":
+			    {lru();break;}
+			}
+		}
+	}
+
+	private static void fifo() {
+	 int[] time=new int[Integer.parseInt(t1.getText())+1];
+	 int[] lst=new int[Integer.parseInt(t4.getText())+1];
+	 int sum=Integer.parseInt(t1.getText());
+	 int store=Integer.parseInt(t4.getText());
+	 for(int x=1;x<=sum;x++)
+		 {time[x]=99;}
+	 for(int x=1;x<=store;x++)
+	     {lst[x]=0;}
+	 int stick=1;
+	 while(stick<=sum)
+	 {
+		int tp1=-1;
+		for(int x=store;x>0;x--)
+		{
+			if(lst[x]==0||lst[x]==list[stick])
+				tp1=x;
+		}
+		if(tp1!=-1)
+		{
+			if(lst[tp1]==list[stick])
+			{
+				stick++;
+			}
+			else if(lst[tp1]==0)
+			{
+				lst[tp1]=list[stick];
+				time[lst[tp1]]=stick;
+				stick++;
+			}
+		}
+		else
+		{
+			int min=99;
+			int tp2=1;
+			for(int x=1;x<sum+1;x++)
+			{
+				if(time[x]<=min)
+				{
+					min=time[x];
+					tp2=x;
+				}
+			}
+			t5.append("change:"+tp2);
+			for(int x=1;x<=store;x++)
+			{
+				if(lst[x]==tp2) lst[x]=list[stick];
+			}
+			time[list[stick]]=stick;
+			time[tp2]=99;
+			stick++;
+		}
+		t5.append("output:");
+		for(int x=1;x<=store;x++)
+		{
+			t5.append(lst[x]+"  ");
+		}
+		t5.append("\n");
+	 }
+		
+	}
+
+	private static void lru() {
+		 int sum=Integer.parseInt(t1.getText());
+		 int store=Integer.parseInt(t4.getText());
+		 int []lst=new int[store+1];
+		 int []time=new int[sum+1];
+		 for(int x=1;x<store;x++)
+			 {
+			   lst[x]=0;
+			   time[x]=0;
+			 }
+		 int stick=1;
+		 t5.append("\n");
+		 while(stick<=sum)
+		 {
+			 int tp1=-1;
+			 for(int x=store;x>0;x--)
+			 {
+				 if(lst[x]==0||lst[x]==list[stick])
+				 {
+					 tp1=x;
+				 }
+			 }
+			 if(tp1!=-1)
+			 {
+				 if(lst[tp1]==0)
+				 {
+					 lst[tp1]=list[stick];
+					 time[list[stick]]++;
+					 stick++;
+				 }
+				 else if(lst[tp1]==list[stick])
+				 {
+					 time[list[stick]]++;
+					 stick++;
+				 }
+			 }
+			 else
+			 {
+				 int min=99;int tp2=0;
+				 for(int x=1;x<=sum;x++)
+				 {
+					 if(time[x]!=0&&time[x]<min)
+					 {
+						 min=time[x];
+						 tp2=x; 
+					 }
+				 }
+				 for(int x=1;x<=store;x++)
+				 {
+					 if(lst[x]==tp2)
+					 {
+						 lst[x]=list[stick];
+						 t5.append("change"+tp2);
+						 time[tp2]=0;
+						 time[lst[x]]=1;
+					 }
+				 }
+				 stick++;
+			 }
+			 t5.append("output:");
+			 for(int x=1;x<=store;x++)
+			 {
+				 t5.append(" "+lst[x]);
+			 }
+			 t5.append("\n");
+		 }
+		 
+	}
+
+	private static void opt() {
+		 int sum=Integer.parseInt(t1.getText());
+		 int store=Integer.parseInt(t4.getText());
+		 int []lst=new int[store+1];
+		 int []time=new int[sum+1];
+		 for(int x=1;x<=store;x++)
+			 lst[x]=0;
+		 for(int x=1;x<=sum;x++)
+		 {
+			 time[x]=0;
+		 }
+		 for(int x=1;x<=sum;x++)
+		 {
+			 time[list[x]]=x;
+		 }
+		 int stick=1;
+		 while(stick<=sum)
+		 {
+			 int tp1=-1;
+			 for(int x=1;x<=store;x++)
+			 {
+				 if(lst[x]==0||lst[x]==list[stick])
+				 {
+					 tp1=x;
+				 }
+			 }
+			 if(tp1!=-1)
+			 {
+				 if(lst[tp1]==0)
+				 {
+					 lst[tp1]=list[stick];
+					 int tp2=stick;
+					 if(time[lst[tp1]]==stick)
+					 {
+						 while(list[tp2]!=list[stick]&&tp2<=sum)
+						 {
+							 tp2++;
+						 }
+							 time[lst[tp1]]=tp2;
+						 if(tp2==sum) tp2++;
+						 stick++;
+					 }
+					 if(lst[tp1]==list[stick])
+					 {
+						 if(time[lst[tp1]]==stick)
+						 {
+							 while(list[tp2]!=list[stick]&&tp2<=sum)
+							 {
+								 tp2++;
+							 }
+								 time[lst[tp1]]=tp2;
+							 stick++;
+						 }
+					 }
+				 }
+			 }
+					 else
+					 {
+						 int max=0;int tp3=0;
+						 for(int x=1;x<=store;x++)
+						 {
+							 if(time[lst[x]]>max)
+							 {
+								 max=time[lst[x]];
+								 tp3=x;
+							 }
+						 }
+						 lst[tp3]=list[stick];
+						 if(time[lst[tp1]]==stick)
+						 {
+							 while(list[tp3]!=list[stick]&&tp3<=sum)
+							 {
+								 tp3++;}
+								 time[lst[tp1]]=tp3;
+						 }
+						 stick++;
+					 }
+			 t5.append("output:");
+			 for(int x=1;x<=store;x++)
+			 {
+				 t5.append(" "+lst[x]);
+			 }
+			 t5.append("\n");
+			 }
+	 }
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+}

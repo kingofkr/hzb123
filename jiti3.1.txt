@@ -1,0 +1,44 @@
+#include<iostream>
+#include<string>
+using namespace std;
+void main()
+{
+	int sum;
+	cout<<"请输入字符串数量"<<endl;
+	cin>>sum;
+	char **memory=new char *[sum];
+	for(int x=0;x<sum;x++)
+	{memory[x]=new char[26];}
+	for(int x=0;x<sum;x++)
+		for(int y=0;y<26;y++)
+			memory[x][y]='#';
+	for(int x=0;x<sum;x++)
+	{
+		cout<<"请输入录入字符串"<<endl;
+		cin>>memory[x];
+	}
+	cout<<"存储过程开始"<<endl;
+	char **device=new char *[sum];
+	for(int x=0;x<sum;x++)
+		device[x]=new char[26];
+	for(int x=0;x<sum;x++)
+		for(int y=0;y<26;y++)
+			device[x][y]='#';
+	for(int x=0;x<26;x++)
+	{
+		for(int y=0;y<sum;y++)
+		{device[y][x]=memory[y][x];
+	     for(int z=0;z<sum;z++)
+		 {cout<<"设备"<<z<<"输出为";
+		   for(int q=0;q<26;q++)
+		   {cout<<device[z][q];
+		   }
+		   cout<<endl;
+		 }
+	}
+		cout<<endl;
+	}
+	cout<<"存储过程结束"<<endl;
+}
+	
+	
