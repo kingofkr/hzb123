@@ -1,0 +1,59 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int stois(string aa)
+{
+char* end;  
+ int i = static_cast<int>(strtol(aa.c_str(),&end,10));  
+return i;
+}
+
+string itoss(int aa)
+{ 
+char cs[3];
+int length = sprintf(cs, "%d", aa);
+string c;
+c=cs;
+return c;
+}
+
+
+int main()
+{
+	string str;
+	cin>>str;
+	int bcs;
+	cin>>bcs;
+	int cur2=0;
+	int length=str.length();
+	string result="";
+	string yushu="";
+	int shang;
+	int i;
+	int yushus;
+	int pass=0;
+	while(cur2<length)
+	{
+		string temp1;
+		temp1=yushu+str[cur2];
+		i=stois(temp1);
+		string temp2;
+		temp2=yushu+str[cur2]+str[cur2+1];
+		if(i<bcs&&cur2==0)
+		{i=stois(temp2);pass=1;}
+		shang=i/bcs;
+		yushus=i%bcs;
+		result=result+itoss(shang);
+		if(yushus!=0)
+		yushu=itoss(yushus);
+		else yushu="";
+		cur2++;
+		if(pass==1) {cur2++;pass=0;}
+
+	}
+	if(yushu=="") yushu="0";
+	cout<<result<<" "<<yushu;
+	return 0;
+}
+
